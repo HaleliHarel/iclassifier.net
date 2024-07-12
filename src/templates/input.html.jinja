@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <title>{{ project_title }}: input forms</title>
+
+    <script>
+    console.log('Setting variables for the frontend...');
+    const siteURL = '{{ base_url }}',
+            dbAPIURL = '{{ base_url }}/api/backend/{{ project_tag }}',
+            dbAPIURLCommon = '{{ base_url }}/api/backend',
+            biblioAPIURL = '{{ base_url }}/api/biblio',
+            xlsxURL = '{{ base_url }}/api/backend/{{ project_tag }}/getxlsx',
+            projectTag = '{{ project_tag }}',
+            projectType = '{{ project_type }}',
+            projectTitle = '{{ project_title }}',
+            userIsAdmin = {{ user_is_admin }};
+    console.log('Done.');
+
+    function downloadExcel() {
+        window.location.href = xlsxURL;
+    }
+    </script>
+
+    <script src="{{ js_store_url }}/mithril.js"></script>
+
+    <!--  Helper routines  -->
+    <script src="{{ js_store_url }}/helpers_common.js"></script>
+
+    <!--  Info imports  -->
+    <script src="{{ js_store_url }}/info/view.js"></script>
+    <script src="{{ js_store_url }}/info/async.js"></script>
+
+    <!--  Supertext imports  -->
+    <script src="{{ js_store_url }}/supertexts/async.js"></script>
+    <script src="{{ js_store_url }}/supertexts/view.js"></script>
+
+    <!-- Object-menu imports -->
+    <script src="{{ js_store_url }}/objects/templates.js"></script>
+    <script src="{{ js_store_url }}/objects/async.js"></script>
+    <script src="{{ js_store_url }}/objects/view.js"></script>
+
+    <!-- Witness-menu imports -->
+    <script src="{{ js_store_url }}/witnesses/templates.js"></script>
+    <script src="{{ js_store_url }}/witnesses/async.js"></script>
+    <script src="{{ js_store_url }}/witnesses/view.js"></script>
+
+    <!--  Lemma-menu imports  -->
+    <script src="{{ js_store_url }}/lemmas/templates.js"></script>
+    <script src="{{ js_store_url }}/lemmas/async.js"></script>
+    <script src="{{ js_store_url }}/lemmas/view.js"></script>
+
+    <!--  Token-menu imports  -->
+    <script src="{{ js_store_url }}/token/token.js"></script>
+    <script src="{{ js_store_url }}/token/async.js"></script>
+    <script src="{{ js_store_url }}/token/pics.js"></script>
+    <script src="{{ js_store_url }}/token/components.js"></script>
+    <script src="{{ js_store_url }}/token/view.js"></script>
+
+    <!--  Biblio-menu imports  -->
+    <script src="{{ js_store_url }}/biblio/async.js"></script>
+    <script src="{{ js_store_url }}/biblio/templates.js"></script>
+    <script src="{{ js_store_url }}/biblio/bibtex.js"></script>
+    <script src="{{ js_store_url }}/biblio/view.js"></script>
+
+    <!-- Tokens from text imports -->
+    <script src="{{ js_store_url }}/running/view.js"></script>
+    <script src="{{ js_store_url }}/running/async.js"></script>
+
+    <!--  Classifier annotation imports  -->
+    <script src="{{ js_store_url }}/clfannotation/templates.js"></script>
+    <script src="{{ js_store_url }}/clfannotation/async.js"></script>
+    <script src="{{ js_store_url }}/clfannotation/view.js"></script>
+
+    <!-- Admin comments -->
+    <script src="{{ js_store_url }}/admincomments/view.js"></script>
+    <script src="{{ js_store_url }}/admincomments/async.js"></script>
+
+    <script src="{{ js_store_url }}/main.js"></script>
+
+    <script>
+        document.addEventListener(
+            'DOMContentLoaded', 
+            async () => {
+                let root = document.getElementById('menu-mount-point'),
+                    overlaySelect = document.getElementById('overlay-select'),
+                    overlayShow = document.getElementById('overlay-show'),
+                    overlayShowWitness = document.getElementById(
+                        'overlay-witness-pic-show'
+                    );
+
+                m.mount(root, meta);
+                m.mount(overlaySelect, witnessPicSelectComponent);
+                m.mount(overlayShow, showPicInContextComponent);
+                m.mount(overlayShowWitness, witnessPicShowComponent);
+
+                if ({{ user_is_admin }}) {
+                    byID('admin-button-tokens').style.display = 'inline-block';
+                }
+
+                showDownloadDiv('menu data');
+                await fetchStats();
+                await fetchObjectIDs();
+                await fetchWitnessIDs();
+                await fetchTokenIDs();
+                await fetchLemmaIDs();
+                await fetchObjects();
+                await fetchSupertexts();
+                await fetchBiblioAndRedraw();
+                await populateBiblioCache();
+                await populateTokenCache();
+                await populateLemmaCache();
+                await populateWitnessCache();
+                await populateSupertextCache();
+                await downloadThesauri();
+                await downloadConcepticon();
+                await prepareClfList();
+                populateWitnessNameCache();
+                hideDownloadDiv();
+        });
+
+        // Prevent the backspace from sending users to the previous page.
+        // This should never have been a feature in the first place.
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Backspace' &&
+                e.target['tagName'] !== 'INPUT' &&
+                e.target['tagName'] !== 'TEXTAREA')
+                e.preventDefault();  // do nothing
+        });
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ static_store_url }}/css/token.css">
+</head>
+
+<body>
+
+    <header
+        style="display: flex; justify-content: space-between; background-color: black; vertical-align: middle; width: 100%; margin: 0; margin-bottom: 10px; padding-left: 20px;">
+        <div>
+            <h1 style="color: white;">Input forms</h1>
+        </div>
+        <div style="display: block; height: 100%; margin-right: 30px;">
+            <img alt="iClassifier logo" src="{{ static_store_url }}/img/iclassifier-logo-new.png"
+                style="height: 50px; vertical-align: middle; margin-top: 13px;">
+        </div>
+    </header>
+
+    <div id="main" style="margin-top: 20px;">
+        <form action="/">
+            <input type="submit" value="Go to the project list" />
+        </form>
+        <br/>
+        <input type="button" class="show-menu" value="Add/edit lemmas" onclick="addMenu('lemma');">
+        <input type="button" class="show-menu" value="Add/edit tokens" onclick="addMenu('token');">
+        <input type="button" class="show-menu" value="Annotate classifiers" onclick="addMenu('annotation');">
+        <input type="button" class="show-menu" value="Add/edit objects" onclick="addMenu('object');">
+        <input type="button" class="show-menu" value="Add/edit witnesses" onclick="addMenu('witness');">
+        <input type="button" class="show-menu" value="Add/edit supertexts" onclick="addMenu('supertext');">
+        <input type="button" class="show-menu" value="Add/edit biblio records" onclick="addMenu('biblio');">
+        <br />
+        <input type="button" class="show-menu" value="Add admin comments to tokens"
+            onclick="addMenu('admin-comments-tokens');" id="admin-button-tokens" style="display: none">
+        <input type="button" class="show-menu" value="Add tokens from running text"
+            onclick="addMenu('tokens-from-text');">
+        <input type="button" class="show-menu" value="Show/edit project information" onclick="addMenu('info');">
+        <input type="button" class="show-menu" value="Download an Excel file" onclick="downloadExcel();">
+
+        <div id="menu-mount-point"></div>
+    </div>
+    <div id="overlay-select"></div>
+    <div id="overlay-show"></div>
+    <div id="overlay-witness-pic-show"></div>
+    <div id="overlay-download">Downloading data...</div>
+</body>
+
+</html>

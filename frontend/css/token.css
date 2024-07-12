@@ -1,0 +1,448 @@
+@font-face {
+    font-family: 'hierofont';
+    src: url("https://eurphon.info/static/fonts/EgyptianHiero.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'kanjifont';
+    src: url("https://eurphon.info/static/fonts/kanji_font.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'antinoou';
+    src: url("https://eurphon.info/static/fonts/Antinoou.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'cuneiform';
+    src: url('https://eurphon.info/static/fonts/CuneiformComposite.woff') format('woff');
+}
+
+.chinese {
+    font-family: 'Noto Sans TC', sans-serif !important;
+}
+
+.guodian {
+    font-family: 'kanjifont', sans-serif !important;
+}
+
+.hieroglyphic {
+    font-family: 'hierofont', sans-serif !important;
+}
+
+.cuneiform {
+    font-family: 'cuneiform', sans-serif !important;
+}
+
+.basic {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding-bottom: 40px;
+    padding-right: 20px;
+    background-color: lightgrey;
+    font-family: 'Raleway', sans-serif;
+}
+
+div#main {
+    padding-left: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+div#menu-mount-point {
+    padding-top: 15px;
+}
+
+div.menu-row img {
+    max-width: 400px !important;
+}
+
+div.menu-row-wide {
+    grid-column: 1/3;
+    padding: 5px;
+}
+
+div#menu-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 5px;
+    align-items: flex-start;
+}
+
+div#menu-wrapper:empty {
+    height: 0;
+}
+
+div.menu-inner {
+    border-radius: 5px;
+}
+
+div.menu {
+    width: 470px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3px;
+    row-gap: 3px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11pt;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+div.wide-menu {
+	width: 640px;
+	display: grid;
+	column-gap: 3px;
+    row-gap: 3px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11pt;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+label {
+    font-size: 11pt;
+}
+
+div.menu-row {
+    padding: 5px;
+    grid-row: auto;
+    grid-column: 1/3;
+    max-width: 460px !important;
+}
+
+div.menu-col {
+    grid-column: auto;
+    grid-row: auto;
+    padding: 5px;
+}
+
+div.token-color {
+    /*background-color: antiquewhite;*/
+    background-color: lightblue;
+}
+
+div.lemma-color {
+    background-color: palegoldenrod;
+}
+
+div.witness-color {
+    /*background-color: rgb(253, 225, 213);*/
+    background-color: lightgreen;
+}
+
+div.object-color {
+    background-color: #d9ffb3;
+}
+
+div.running-color {
+    background-color: ghostwhite;
+}
+
+div.menu-row-token {
+    /*background-color: antiquewhite;*/
+    background-color: lightblue;
+}
+
+div.menu-col-token {
+    /*background-color: antiquewhite;*/
+    background-color: lightblue;
+}
+
+div.menu-row-lemma {
+    background-color: palegoldenrod;
+}
+
+div.menu-col-lemma {
+    background-color: palegoldenrod;
+}
+
+div.menu-row-supertext {
+    background-color: rgb(241, 185, 185);
+}
+
+div.supertext-color {
+    background-color: rgb(241, 185, 185);
+}
+
+div.annotation-color {
+    background-color: #e6ffcc;
+}
+
+div#clf-parses {
+    background-color: antiquewhite;
+    padding: 5px;
+    grid-row: auto;
+    grid-column: 1/3;
+}
+
+div.biblio-ref {
+    grid-column: 1/3;
+    padding: 3px;
+    border: 1px dotted gray;
+    margin-top: 3px;
+}
+
+div.biblio-ref:last-of-type {
+    margin-bottom: 3px;
+}
+
+input[type=button] {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10pt;
+}
+
+input[type=text] {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10pt;
+    width: 200px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+    padding: 2px;
+}
+
+button {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10pt;
+}
+
+div.classifier-parse {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 3px;
+}
+
+div.clf-row {
+    grid-column: 1/3;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+div.clf-pics-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    grid-column: 1/3;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+img.clf-pic {
+    max-width: 150px;
+    margin: 5px;
+}
+
+textarea {
+    width: 90%;
+}
+
+.biblio-references {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding: 5px;
+    grid-row: auto;
+    grid-column: 1/3;
+
+}
+
+.biblio-details {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    column-gap: 3px;
+    row-gap: 5px;
+    background-color: #cfe8ff;
+    border-radius: 3px;
+    margin-bottom: 5px;
+}
+
+div.select-list {
+    font-size: 11pt;
+    background-color: white;
+    margin-top: 7px;
+    padding: 5px;
+    border-radius: 3px;
+    width: 400px;
+    max-height: 200px;
+    overflow: scroll;
+}
+
+span.list-element:hover {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+span.list-element {
+    border-radius: 2px;
+    background-color: beige;
+    display: inline-block;
+    margin: 2px;
+    padding: 2px;
+}
+
+div.witness-pic-overlay {
+    padding: 30px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    z-index: 1000;
+    background: rgba(250, 250, 250, 0.95);
+}
+
+/*
+* Biblio-menu styling.
+*/
+
+h4 {
+    margin-top: 0;
+}
+
+.biblio-menu-wrapper {
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid black;
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    width: 350px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+.menu-entry {
+    grid-row: auto;
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    background-color: aliceblue;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+.input-label {
+    width: 80px;
+    grid-row: auto;
+    grid-column: 1/2;
+}
+.select-div {
+    grid-row: auto;
+    grid-column: 2/3;
+    width: 200px;
+}
+
+div.bib-menu {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+input[type=button].kill-menu {
+    background-color: darkred;
+    color: white;
+    font-size: 14pt;
+    border-radius: 5px;
+    margin-top: 0;
+ }
+
+ div#overlay-download {
+    display: none;
+    background-color: black;
+    opacity: 0.6;
+    width: 300px;
+    height: 94px;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 18pt;
+    color: red;
+    position: fixed;
+    left: 25vw;
+    top: 150px;
+ }
+
+ /* Styling for thesaurus menus */
+
+.menu-wrapper {
+    display: none;
+    width: 250px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    padding: 3px;
+    background-color: white;
+}
+.float_menu_header {
+    grid-row: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+.inner-menu {
+    display: grid;
+    row-gap: 3px;
+    margin-top: 3px;
+    max-height: 300px;
+    overflow: auto;
+}
+.menu-button-submenu {
+    border-radius: 1px;
+    padding: 2px;
+    background-color: #E3F2FD;
+    cursor: pointer;
+}
+.menu-button-value {
+    border-radius: 1px;
+    padding: 2px;
+    background-color: #B2DFDB;
+    cursor: pointer;
+}
+.menu-button-submenu:hover {
+    background-color: grey;
+    color: white;
+}
+.menu-button-value:hover {
+    background-color: darkgoldenrod;
+    color: white;
+}
+
+.lemma-variant-primary {
+    background-color: burlywood;
+}
+
+.lemma-variant {
+    background-color: gainsboro;
+}
+
+.b {
+    font-weight: bold;
+}
+
+.log-out-button {
+    color: white;
+    background-color: darkolivegreen;
+    border: 0;
+    padding: 5px;
+}
+
+.show-menu {
+    margin-right: 3px;
+    margin-left: 0;
+    margin-top: 3px;
+}
+
+.obligatory::placeholder {
+    color: red;
+}

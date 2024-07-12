@@ -1,0 +1,32 @@
+{% extends "base.html.jinja" %}
+{% block title %}iClassifier logout{% endblock %}
+{% block body %}
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+    <h1>iClassifier input system</h1>
+
+    <p>{{ user_name }}’s dashboard.</p>
+
+    <p>Available projects:</p>
+
+    <form method="POST" action="/project">
+      <select class="project-select" name="project">
+      {% for project in projects %}
+        <option value="{{ project.value }}">{{ project.label }}</option>
+      {% endfor %}
+      </select>
+      <br/>
+      <input type="submit" value="Open project">
+    </form>
+    <br/>
+    <form method="POST" action="/logout">
+        <input type="submit" value="Logout">
+    </form>
+{% endblock %}
