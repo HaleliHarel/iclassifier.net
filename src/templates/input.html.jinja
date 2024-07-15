@@ -11,10 +11,10 @@
     <script>
     console.log('Setting variables for the frontend...');
     const siteURL = '{{ base_url }}',
-            dbAPIURL = '{{ base_url }}/api/backend/{{ project_tag }}',
-            dbAPIURLCommon = '{{ base_url }}/api/backend',
+            dbAPIURL = '{{ base_url }}/api/{{ project_tag }}',
+            dbAPIURLCommon = '{{ base_url }}/api',
             biblioAPIURL = '{{ base_url }}/api/biblio',
-            xlsxURL = '{{ base_url }}/api/backend/{{ project_tag }}/getxlsx',
+            xlsxURL = '{{ base_url }}/api/{{ project_tag }}/getxlsx',
             projectTag = '{{ project_tag }}',
             projectType = '{{ project_type }}',
             projectTitle = '{{ project_title }}',

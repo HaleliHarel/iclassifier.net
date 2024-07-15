@@ -1,5 +1,7 @@
+from functools import wraps
 import flask
 from flask_login import *
+import jwt
 import forms
 import users
 import authentication
@@ -8,19 +10,56 @@ import utils
 
 app = flask.Flask(__name__)
 with open('../data/auth/secretkey', 'r', encoding='utf-8') as inp:
-    app.secret_key = bytes(inp.read().strip())
+    app.secret_key = bytes(inp.read().strip(), encoding='utf-8')
+with open('../data/auth/jwtsecretkey', 'r', encoding='utf-8') as inp:
+    jwt_secret_key = inp.read()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-# Register the login view
-login_manager.login_view = "login"
 
-
+BASE_URL = 'https://iclassifier.click'
 USER_DB = {
     str(user_id): users.User(username, user_id)
     for user_id, username in authentication.cursor.execute(
         'SELECT id, name FROM participants')
 }
+USER_DB_INV = {
+    v.name: k
+    for k, v in USER_DB.items()
+}
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return flask.redirect(f'{BASE_URL}/input/login')
+
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        if 'jwt_token' in flask.request.cookies:
+            # Decode the token and check if the user exists.
+            try:
+                jwt_token_data = jwt.decode(
+                    flask.request.cookies.get('jwt_token'), 
+                    jwt_secret_key, 
+                    algorithms="HS256")
+                user_name = jwt_token_data['user']
+                if user_name in USER_DB_INV:
+                    return f(*args, **kwargs)
+                else:
+                    return flask.make_response(f'User "{user_name}" does not exist.'), 401
+            except jwt.ExpiredSignatureError:
+                return (
+                    flask.make_response('The authentication token has expired; please login again.'), 
+                    401
+                )
+            except jwt.DecodeError:
+                return flask.make_response(
+                    'Invalid token; please login again.'), 400
+            except Exception as e:
+                return flask.make_response(f'Error: {e}'), 500
+    return decorator
 
 
 @login_manager.user_loader
@@ -44,7 +83,7 @@ def index():
     projects = utils.get_projects_for_user(int(user_id),
                                            authentication.dbconn)
     # print(user_id, projects)
-    return flask.render_template('index.html.jinja', 
+    return flask.render_template('index.html.jinja',
                                  projects=projects,
                                  user_name=current_user.name)
 
@@ -69,19 +108,20 @@ def login():
             username, password)
         if authentication_status == authentication.AuthStatus.NO_USER:
             flask.flash(f'No such user: "{username}".')
-            return flask.redirect(flask.url_for('login'))
+            return flask.redirect(f'{BASE_URL}/input/login')
         elif authentication_status == authentication.AuthStatus.INCORRECT_PASSWORD:
             flask.flash('Incorrect password.')
-            return flask.redirect(flask.url_for('login'))
+            return flask.redirect(f'{BASE_URL}/input/login')
         set_user_authenticated(str(user_id))
         # TODO: Check if the user is an admin and set the flag
         user = load_user(str(user_id))
         login_user(user)
         flask.flash('Logged in successfully.')
 
-        response = flask.make_response(flask.redirect(flask.url_for('index')))
+        response = flask.redirect(f'{BASE_URL}/input')
         response.set_cookie('username', username)
-        response.set_cookie('auth_token', 'auth token will be here')
+        jwt_token = jwt.encode({'user': username}, jwt_secret_key, algorithm="HS256")
+        response.set_cookie('jwt_token', jwt_token)
         return response
 
     else:
@@ -94,13 +134,13 @@ def login():
 @login_required
 def project(project_tag):
     return flask.render_template(
-        'input.html.jinja', 
+        'input.html.jinja',
         project_tag=project_tag,
-        base_url='127.0.0.1:8000',
+        base_url=f'{BASE_URL}',
         project_title=authentication.get_project_info(project_tag)[2],
         project_type=utils.project_types.get(project_tag, 'hieroglyphic'),
-        js_store_url='https://iclassifier.click/static/js',
-        static_store_url='https://iclassifier.click/static',
+        js_store_url=f'{BASE_URL}/static/js',
+        static_store_url=f'{BASE_URL}/static',
         user_is_admin='true' if current_user.is_admin else 'false')
 
 
@@ -108,13 +148,15 @@ def project(project_tag):
 @login_required
 def project_redirect():
     project_tag = flask.request.form['project']
-    return flask.redirect(flask.url_for(f'project', project_tag=project_tag))
+    return flask.redirect(f'{BASE_URL}/input/project/{project_tag}')
 
 
 @app.route("/logout", methods=['POST'])
 @login_required
 def logout():
     logout_user()
-    return flask.redirect(flask.url_for('index'))
+    # TODO: invalidate the JWT token
+    return flask.redirect(f'{BASE_URL}/input/login')
 
 
+# API endpoints --- those protected by a JWT token

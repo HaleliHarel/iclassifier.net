@@ -16,7 +16,7 @@
 
     <p>Available projects:</p>
 
-    <form method="POST" action="/project">
+    <form method="POST" action="/input/project">
       <select class="project-select" name="project">
       {% for project in projects %}
         <option value="{{ project.value }}">{{ project.label }}</option>
@@ -26,7 +26,7 @@
       <input type="submit" value="Open project">
     </form>
     <br/>
-    <form method="POST" action="/logout">
+    <form method="POST" action="/input/logout">
         <input type="submit" value="Logout">
     </form>
 {% endblock %}
