@@ -43,5 +43,31 @@ def hashpass(password):
 
 
 def get_project_info(project_tag):
-    cursor.execute('SELECT * FROM project_info WHERE `project_id`=?', (project_tag,))
-    return cursor.fetchone()
+    cursor.execute(
+        'SELECT * FROM project_info WHERE `project_id`=?', 
+        (project_tag,))
+    data_tuple = cursor.fetchone()
+    colnames = [d[0] for d in cursor.description]
+    return dict(zip(colnames, data_tuple))
+
+
+def check_user_access(user_id, project_tag):
+    try:
+        project_id = cursor.execute(
+            'SELECT id FROM `project_info` WHERE `project_id` = ?',
+            (project_tag,)
+        ).fetchone()[0]
+    except Exception as e:
+        print(f'Error: {e}')
+        return None
+    
+    try:
+        return cursor.execute(
+            '''SELECT type FROM permissions 
+               WHERE `project_id` = ?
+               AND `user_id` = ?''',
+            (project_id, user_id)
+        ).fetchone()[0]
+    except Exception as e:
+        print(f'Error: {e}')
+        return None

@@ -1,6 +1,42 @@
 import json
 
 
+ORIGIN = 'iclassifier.click'
+# Possible actions
+GET_ACTIONS = [
+    'all',
+    'ids',
+    'byid',
+    'byforeignid',
+    'bycolumnvalue',
+    'bycolumnname',
+    'allclfs',
+    'clfreport',
+    'getxlsx',
+    'getadmincomment'
+]
+POST_ACTIONS = [
+    'add',
+    # An add where all the data about the item are sent at once.
+    'holisticadd',
+    'holisticdelete',
+    'addmultiple',
+    'deletebyid',
+    'deletebyidmultiple',
+    'deletebyforeignkey',
+    'addbyforeignkey',
+    'replacebyforeignkey',
+    'updaterecord',
+    'updateclfparses',
+    'clearcompoundids',
+    'setcompoundids',
+    'addtokenstowitness',
+    'addtokenstowitnesstransliteration',
+    'addclfannotations',
+    'updateadmincomment'
+]
+
+
 with open('../data/project_types.json') as f:
     project_types = json.load(f)
 with open('../data/biblio_id_mapping.json', 'r', encoding='utf-8') as inp:
@@ -74,3 +110,48 @@ def get_projects_for_user(user_id, connection):
                 {'value': project_tag, 'label': project_title}
             )
     return result
+
+
+def populate_headers_basic(resp):
+    """Restricts access to iclassifier.pw; allows cookies.
+    Should not be used in the code itself, consider using one of
+    populate_headers_TYPE functions."""
+    resp.headers['Access-Control-Allow-Origin'] = ORIGIN
+    resp.headers['Access-Control-Allow-Credentials'] = 'true'
+
+
+def populate_headers_json(resp):
+    resp.headers['Content-Type'] = 'application/json'
+    populate_headers_basic(resp)
+
+
+def populate_headers_plain(resp):
+    resp.headers['Content-Type'] = 'text/plain'
+    populate_headers_basic(resp)
+
+
+def check_objects_table(connection, cursor, table_name):
+    table_names = cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table';")
+    table_names = [el[0] for el in table_names if el[0] != 'sqlite_sequence']
+    if table_name not in table_names:
+        if table_name == 'objects':
+            cursor.execute("""CREATE TABLE objects (
+                `id` integer primary key autoincrement,
+                `name` text,
+                `period_date_start` text,
+                `period_date_end` text,
+                `chrono_date_start` text,
+                `chrono_date_end` text,
+                `comments` text,
+                `location` text,
+                `tla_data` text -- json-encoded information from TLA; by default read only
+            )""")
+        elif table_name == 'witness_tla_info':
+            cursor.execute("""CREATE TABLE witness_tla_info (
+                `id` integer primary key autoincrement,
+                `witness_id` integer references `witnesses`(`id`),
+                `object_id` integer references `objects`(`id`),
+                `tla_data` text -- json-encoded information from TLA; by default read only
+            )""")
+    connection.commit()

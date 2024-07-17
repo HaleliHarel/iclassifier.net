@@ -358,7 +358,9 @@ def updateclfparses(POST_data, c, conn):
         raise e
 
 
-def get_stats(cursor):
+def get_stats(project_tag):
+    conn = sqlite3.connect(f'../data/projects/{project_tag}/clf.db')
+    cursor = conn.cursor()
     num_lemmas = cursor.execute(
         'SELECT COUNT(`id`) FROM `lemmas`'
     ).fetchone()[0]
