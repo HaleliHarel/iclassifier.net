@@ -1,8 +1,7 @@
-const authURL = 'https://www.iclassifier.pw/api/authserver',
-	// const authURL = 'http://127.0.0.1:21000',
-	requestURL = 'https://www.iclassifier.pw/api/egyptian-backend/readonly',
-	// requestURL = 'http://127.0.0.1:11000/readonly',
-	jseshURL = 'https://www.iclassifier.pw/api/jseshrender/?mdc=';
+// const authURL = 'https://www.iclassifier.pw/api/authserver',
+// const authURL = 'http://127.0.0.1:21000',
+const requestURL = 'https://iclassifier.click/api/readonly',
+	jseshURL = 'https://iclassifier.click/jsesh/?mdc=';
 
 let path = null,
 	project = null,
@@ -267,21 +266,21 @@ function normaliseScript(scriptId) {
 	}
 }
 
-function switchProjectWrapper(element) {
-	// A synchronous wrapper that changes the project type and then fires switchProject,
-	// so that Mithril could redraw the interface without using stale data.
+// function switchProjectWrapper(element) {
+// 	// A synchronous wrapper that changes the project type and then fires switchProject,
+// 	// so that Mithril could redraw the interface without using stale data.
 
-	// Delete stats used to draw menus.
-	clfCounts = {};
-	lemmasForClfs = {};
-	projectType = element.value.split('|')[1];
+// 	// Delete stats used to draw menus.
+// 	clfCounts = {};
+// 	lemmasForClfs = {};
+// 	projectType = element.value.split('|')[1];
 
-	// Fetch data and do the usual stuff.
-	switchProject(element);
-}
+// 	// Fetch data and do the usual stuff.
+// 	switchProject(element);
+// }
 
-async function switchProject(element) {
-	setMenu(null);
+async function loadData() {
+	// setMenu(null);
 	clfReport.currentClf = '---';
 	lemmaReport.currentLemma = '---';
 	tokenStats.currentWitness = '---';
@@ -296,17 +295,17 @@ async function switchProject(element) {
 
 
 	// Disable the buttons while loading the data.
-	project = null;
+	// project = null;
 	downloadingData = true;
-	const fields = element.value.split('|'),
-		newProject = fields[0];
-	projectType = fields[1];
+	// const fields = element.value.split('|'),
+	// 	newProject = fields[0];
+	// projectType = fields[1];
 	// This needs to know the new project type so as not to do
 	// unnecessary work.
-	window.location.hash = `!${project}`;
+	// window.location.hash = `!${project}`;
 	m.redraw();
 
-	let response = await fetch(`${requestURL}/${newProject}/tokens/all`);
+	let response = await fetch(`${requestURL}/${project}/tokens/all`);
 	if (!response.ok) {
 		const message = await response.text();
 		alert("Failed to download token info from the server: " + message);
@@ -316,7 +315,7 @@ async function switchProject(element) {
 	tokenData = await response.json();
 	filterCompoundTokens();
 
-	response = await fetch(`${requestURL}/${newProject}/clf_parses/all`);
+	response = await fetch(`${requestURL}/${project}/clf_parses/all`);
 	if (!response.ok) {
 		const message = await response.text();
 		alert("Failed to download classifier info from the server: " + message);
@@ -343,7 +342,7 @@ async function switchProject(element) {
 	clfArr = Array.from(clfSet);
 	clfArr.sort();
 
-	response = await fetch(`${requestURL}/${newProject}/lemmas/all`);
+	response = await fetch(`${requestURL}/${project}/lemmas/all`);
 	if (!response.ok) {
 		const message = await response.text();
 		alert("Failed to download lemma info from the server: " + message);
@@ -351,7 +350,7 @@ async function switchProject(element) {
 	}
 	lemmaData = await response.json();
 
-	response = await fetch(`${requestURL}/${newProject}/witnesses/all`);
+	response = await fetch(`${requestURL}/${project}/witnesses/all`);
 	if (!response.ok) {
 		const message = await response.text();
 		alert("Failed to download witness info from the server: " + message);
@@ -360,11 +359,11 @@ async function switchProject(element) {
 	witnessData = await response.json();
 
 	// Turn the buttons back on.
-	project = newProject;
+	// project = newProject;
 	downloadingData = false;
 
 	// Modify the displayed URL
-	window.location.hash = '!' + project;
+	// window.location.hash = '!' + project;
 
 	populateClfDict();
 	checkThePathAndRedraw();
@@ -373,8 +372,10 @@ async function switchProject(element) {
 function populateClfDict() {
 	clfCounts = {};
 	lemmasForClfs = {};
-
+	// console.clear();
 	for (const key in tokenData) {
+		// console.log(`Checking: ${key}`);
+
 		if (!tokenData.hasOwnProperty(key))
 			continue;
 		const tokenInfo = tokenData[key],
@@ -400,10 +401,15 @@ function populateClfDict() {
 		if (!POSSet.has('any') && !POSSet.has(tokenInfo.pos))
 			continue;
 
+		// console.log('Checking witness meta...');
 		// Witness metadata
 		if (clfQueries.witnessId !== 'any' &&
-			tokenInfo.wintess_id !== clfQueries.witnessId)
-			continue;
+			!selectedWitnesses.has(String(tokenInfo.witness_id))) {
+				// console.log(clfQueries.witnessId, tokenInfo.witness_id);
+				continue;
+			}
+		// console.log('Witness meta checked passed.');
+
 		let witnessInfo = {
 			genre: null,
 			script: null,
@@ -485,7 +491,7 @@ function populateClfDict() {
 
 function toggleClfReport(clf2Report) {
 	lemmaReport.currentLemma = '---';
-	window.location.hash = `!${project}/classifiers`;
+	// window.location.hash = `!${project}/classifiers`;
 	selectedWitnesses.clear();
 	selectedWitnessButtons.clear();
 	selectedPOS.clear();
@@ -549,7 +555,7 @@ function toggleTokenStats() {
 	selectedWitnesses.clear();
 	selectedWitnessButtons.clear();
 	m.redraw();
-	window.location.hash = `!${project}/stats`;
+	// window.location.hash = `!${project}/stats`;
 }
 
 function toggleClfQueries() {
@@ -557,7 +563,7 @@ function toggleClfQueries() {
 	selectedWitnesses.clear();
 	selectedWitnessButtons.clear();
 	m.redraw();
-	window.location.hash = `!${project}/clfqueries`;
+	// window.location.hash = `!${project}/clfqueries`;
 }
 
 function toggleLemmaReport() {
@@ -576,7 +582,7 @@ function toggleLemmaReport() {
 	byID('canvas').innerHTML = '';
 	setMenu('lemmaReports');
 	m.redraw();
-	window.location.hash = `!${project}/lemmas`;
+	// window.location.hash = `!${project}/lemmas`;
 }
 
 function toggleMap() {
@@ -588,7 +594,7 @@ function toggleMap() {
 	selectedScripts.clear();
 	selectedScriptsButtons.clear();
 	m.redraw();
-	window.location.hash = `!${project}/map`;
+	// window.location.hash = `!${project}/map`;
 }
 
 function toggleBgrCol(elementID) {
@@ -596,45 +602,45 @@ function toggleBgrCol(elementID) {
 	byID(elementID).style['background-color'] = (currentCol === 'white') ? 'black' : 'white';
 }
 
-async function fetchProjects() {
-	const response = await fetch(`${authURL}/getprojectsforbrowsing`);
-	if (!response.ok) {
-		alert("Couldn’t download the list of projects from the server.");
-		return;
-	}
+// async function fetchProjects() {
+// 	const response = await fetch(`${authURL}/getprojectsforbrowsing`);
+// 	if (!response.ok) {
+// 		alert("Couldn’t download the list of projects from the server.");
+// 		return;
+// 	}
 
-	const data = await response.json();
-	let projectSelect = byID('project-select');
-	for (const key in data) {
-		if (!data.hasOwnProperty(key))
-			continue;
-		let option = document.createElement('option');
-		option.text = data[key].title;
-		option.value = `${key}|${data[key].type}`;
-		projectSelect.appendChild(option);
-	}
+// 	const data = await response.json();
+// 	let projectSelect = byID('project-select');
+// 	for (const key in data) {
+// 		if (!data.hasOwnProperty(key))
+// 			continue;
+// 		let option = document.createElement('option');
+// 		option.text = data[key].title;
+// 		option.value = `${key}|${data[key].type}`;
+// 		projectSelect.appendChild(option);
+// 	}
 
-	// Check for routes.
-	const url = window.location.href;
-	console.log(url);
-	let parts = url.split('#!');
-	if (parts.length === 1)
-		projectSelect.value = '---';
-	else {
-		parts = parts[1].split('/');
-		// Select a project.
-		const key = parts[0];
-		if (data.hasOwnProperty(key)) {
-			projectSelect.value = `${key}|${data[key].type}`;
-			path = parts.slice(1);
-			switchProjectWrapper(projectSelect);
-		} else {
-			alert(`Wrong project tag in the URL: ${key}`);
-			path = null;
-			projectSelect.value = '---';
-		}
-	}
-}
+// 	// Check for routes.
+// 	const url = window.location.href;
+// 	console.log(url);
+// 	let parts = url.split('#!');
+// 	if (parts.length === 1)
+// 		projectSelect.value = '---';
+// 	else {
+// 		parts = parts[1].split('/');
+// 		// Select a project.
+// 		const key = parts[0];
+// 		if (data.hasOwnProperty(key)) {
+// 			projectSelect.value = `${key}|${data[key].type}`;
+// 			path = parts.slice(1);
+// 			switchProjectWrapper(projectSelect);
+// 		} else {
+// 			alert(`Wrong project tag in the URL: ${key}`);
+// 			path = null;
+// 			projectSelect.value = '---';
+// 		}
+// 	}
+// }
 
 /**
  * A function for prettyfying lemma meanings in graphs.
@@ -683,7 +689,7 @@ function showTokenWithClfs(tokenId) {
 		return colouredSpan + witnessString;
 }
 
-document.addEventListener('DOMContentLoaded', fetchProjects);
+// document.addEventListener('DOMContentLoaded', fetchProjects);
 
 let witnessSelectComponent = {
 	view: vnode => m('div', {

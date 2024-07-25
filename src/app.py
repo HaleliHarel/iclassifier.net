@@ -140,6 +140,19 @@ def login():
     return login_page_html
 
 
+@app.route("/project", methods=['POST'])
+@login_required
+def project_redirect():
+    project_tag = flask.request.form['project']
+    return flask.redirect(f'{BASE_URL}/input/project/{project_tag}')
+
+@app.route("/projectreport", methods=['POST'])
+@login_required
+def project_report_redirect():
+    project_tag = flask.request.form['project']
+    return flask.redirect(f'{BASE_URL}/reports/projectreport/{project_tag}')
+
+
 @app.route("/project/<project_tag>", methods=['GET'])
 @login_required
 def project(project_tag):
@@ -154,11 +167,22 @@ def project(project_tag):
         user_is_admin='true' if current_user.is_admin else 'false')
 
 
-@app.route("/project", methods=['POST'])
+@app.route("/projectreport/<project_tag>", methods=['GET'])
 @login_required
-def project_redirect():
-    project_tag = flask.request.form['project']
-    return flask.redirect(f'{BASE_URL}/input/project/{project_tag}')
+def project_report(project_tag):
+    return flask.render_template(
+        'reports.html.jinja',
+        project_tag=project_tag,
+        project_title=authentication.get_project_info(project_tag)['title'],
+        js_store_url=f'{BASE_URL}/static/js/reports',
+        css_store_url=f'{BASE_URL}/static/css/reports',
+        static_store_url=f'{BASE_URL}/static',
+        project_type=utils.project_types.get(project_tag, 'hieroglyphic')
+    )
+        # base_url=f'{BASE_URL}',
+# ,
+#         js_store_url=f'{BASE_URL}/static/js',
+#         user_is_admin='true' if current_user.is_admin else 'false')
 
 
 @app.route("/logout", methods=['POST'])
@@ -315,6 +339,7 @@ def request_handler(project_tag, table_name, action):
 
 
 @app.route('/admincomments/<project_tag>/<table_name>/<item_id>/<action>', methods=['POST', 'GET'])
+@token_required
 def admincomments_handler(project_tag, table_name, item_id, action):
     username = current_user.name
     request = flask.request
@@ -396,3 +421,37 @@ def admincomments_handler(project_tag, table_name, item_id, action):
             resp = flask.make_response(f'An error has occurred: {e}', 500)
             RH.populate_headers_plain(resp)
             return resp
+
+
+@app.route('/readonly/<project_name>/<table_name>/<action>', methods=['GET'])
+@token_required
+def readonly_handler(project_name, table_name, action):
+    """
+    A read-only route for reports.
+    """
+    
+    conn = sqlite3.connect(f'../data/projects/{project_name}/clf.db')
+    c = conn.cursor()
+    table_names = c.execute(
+        "SELECT name FROM sqlite_master WHERE type='table';"
+    )
+    table_names = [el[0] for el in table_names if el[0] != 'sqlite_sequence']
+
+    if table_name not in table_names:
+        resp = flask.make_response('No such table', 400)
+        RH.populate_headers_plain(resp)
+        return resp
+
+    if action == 'all':
+        return RH.readonly_get_all(app, table_name, c)
+    elif action == 'byid':
+        return RH.readonly_byid(app, flask.request, table_name, c)
+    elif action == 'byforeignid':
+        return RH.readonly_byforeignid(app, flask.request, table_name, c)
+    elif action == 'allclfs':
+        resp = flask.make_response(flask.jsonify(Analysis.get_all_clfs(c)),
+                                   200)
+        RH.populate_headers_json(resp)
+        return resp
+    elif action == 'clfreport':
+        return RH.readonly_clfreport(app, flask.request, c)

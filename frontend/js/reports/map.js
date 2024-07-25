@@ -79,7 +79,7 @@ let map = {
 							display: 'grid',
 							'grid-template-columns': '1fr 1fr'
 						}
-						}, [
+					}, [
 						m(posSelectComponent, {
 							styleDict: {
 								'grid-column': '1/2',
@@ -477,7 +477,7 @@ async function drawMapFromDicts(
 			continue;
 		}
 		try {
-			const response = await fetch('https://www.iclassifier.pw/api/jseshrender/?height=50&centered=true&mdc=' + key);
+			const response = await fetch('https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + key);
 			if (!response.ok) {
 				const error = await response.text();
 				console.log(`Failed to download a Jsesh picture: ${error}`);

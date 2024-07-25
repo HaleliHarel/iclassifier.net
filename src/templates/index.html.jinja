@@ -27,9 +27,9 @@
     </form>
     <br/>
 
-    <p>Available project reports (TESTING):</p>
+    <p>Available project reports:</p>
 
-    <form method="POST" action="/reports/project">
+    <form method="POST" action="/reports/projectreport">
       <select class="project-select" name="project">
       {% for project in projects_w_reports %}
         <option value="{{ project.value }}">{{ project.label }}</option>

@@ -7,13 +7,13 @@ let tokenStats = {
 	currentWitness: '---',
 	onupdate: () => {
 		if (tokenStats.currentWitness !== '---') {
-			window.location.hash = `!${project}/stats/${tokenStats.currentWitness}`;
+			// window.location.hash = `!${project}/stats/${tokenStats.currentWitness}`;
 			byID('witness-report-select').value = tokenStats.currentWitness;
 		}
 	},
 	view: () => {
-		if (tokenStats.currentWitness !== '---')
-			window.location.hash = `!${project}/stats/${tokenStats.currentWitness}`;
+		// if (tokenStats.currentWitness !== '---')
+		// 	window.location.hash = `!${project}/stats/${tokenStats.currentWitness}`;
 		return m(
 			'div',
 			{ style: {

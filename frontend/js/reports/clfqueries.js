@@ -69,6 +69,23 @@ let clfQueries = {
                 getSelectFromThesaurus('genres', selectStyle, e => {
                     clfQueries.genre = e.target.value;
                 }),
+
+                m('br'),
+                m('br'),
+                m(witnessSelectComponent, { styleDict: { width: '640px' } }),
+                m('br'),
+                m('input[type=button]', {
+                    value: 'Apply witness selection',
+                    onclick: () => { 
+                        // getClfReport(byID('classifier-report-select').value) 
+                        if (selectedWitnesses.size !== 0) {
+                            clfQueries.witnessId = Array.from(selectedWitnesses).join(' ');
+                        } else {
+                            clfQueries.witnessId = 'any';
+                        }
+                    }
+                }),
+
                 // m('br'),
                 // m('h4', `${getTypes(clfCounts)} classifier types and ${getTokens(clfCounts)} classifier tokens`),
                 // m('br'),
@@ -116,13 +133,17 @@ function getRows(counter) {
             result.push(
                 projectType === 'hieroglyphic' ?
                     {
-                        translit: getClfReportLink(key),
+                        // TODO: make this work again
+                        // translit: getClfReportLink(key),
+                        translit: key,
                         mdc: key,
                         lemmaCount: lemmasForClfs.hasOwnProperty(key) ? lemmasForClfs[key].size : 0,
                         tokenCount: counter[key]
                     } :
                     {
-                        translit: getClfReportLink(key),
+                        // TODO: make this work again
+                        // translit: getClfReportLink(key),
+                        translit: key,
                         lemmaCount: lemmasForClfs.hasOwnProperty(key) ? lemmasForClfs[key].size : 0,
                         tokenCount: counter[key]
                     });
@@ -192,7 +213,7 @@ function getGlyphs() {
 }
 
 async function getBase64(key) {
-    const response = await fetch(`https://www.iclassifier.pw/api/jseshrender/?height=20&centered=true&mdc=${key}`);
+    const response = await fetch(`https://iclassifier.click/jsesh/?height=20&centered=true&mdc=${key}`);
     if (!response.ok)
         return;
     const data = await response.text();

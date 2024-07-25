@@ -19,13 +19,13 @@ let clfReport = {
 	clfPosition: 'any',
 	onupdate: () => {
 		if (clfReport.currentClf !== '---') {
-			window.location.hash = `!${project}/classifiers/${clfReport.currentClf}`;
+			// window.location.hash = `!${project}/classifiers/${clfReport.currentClf}`;
 			byID('classifier-report-select').value = clfReport.currentClf;
 		}
 	},
 	view: () => {
-		if (clfReport.currentClf !== '---')
-			window.location.hash = `!${project}/classifiers/${clfReport.currentClf}`;
+		// if (clfReport.currentClf !== '---')
+		// 	window.location.hash = `!${project}/classifiers/${clfReport.currentClf}`;
 		return m(
 			'div',
 			{ style: { display: showClfReports ? 'block' : 'none', 'padding-top': '0' } },
@@ -529,7 +529,7 @@ async function drawLemmaGraph(clf) {
 	if (projectType === 'hieroglyphic' && (baseGlyph === clf || !useUnicode)) {
 		try {
 			const response = await fetch(
-				'https://www.iclassifier.pw/api/jseshrender/?height=50&centered=true&mdc=' + mdc
+				'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + mdc
 			);
 			if (!response.ok)
 				nodes.add({ id: 1, label: clf, color: { background: 'beige' } });
@@ -590,8 +590,7 @@ async function drawLemmaGraph(clf) {
 	}
 }
 
-function escapeBrackets(unsafe)
-{
+function escapeBrackets(unsafe) {
 	console.log(unsafe);
 	return unsafe
 		// .replace('<em>', 'ITALICS_OPEN')
@@ -600,10 +599,10 @@ function escapeBrackets(unsafe)
 		// .replace('</b>', 'BOLD_CLOSE')
 		.replace('<', '⟨', 'g')
 		.replace('>', '⟩', 'g');
-		// .replace('ITALICS_OPEN', '<em>')
-		// .replace('ITALICS_CLOSE', '</em>')
-		// .replace('BOLD_OPEN', '<b>')
-		// .replace('BOLD_CLOSE', '</b>');
+	// .replace('ITALICS_OPEN', '<em>')
+	// .replace('ITALICS_CLOSE', '</em>')
+	// .replace('BOLD_OPEN', '<b>')
+	// .replace('BOLD_CLOSE', '</b>');
 }
 
 function clearMeaning(meaning) {
@@ -679,7 +678,7 @@ async function drawClfGraph(clf) {
 	if (projectType === 'hieroglyphic' && (baseGlyph === mdc || !useUnicode)) {
 		try {
 			const response = await fetch(
-				'https://www.iclassifier.pw/api/jseshrender/?height=50&centered=true&mdc=' + mdc
+				'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + mdc
 			);
 			if (!response.ok)
 				nodes.add({ id: 1, label: clf, color: { background: 'beige' } });
@@ -737,7 +736,7 @@ async function drawClfGraph(clf) {
 			}
 			try {
 				const response = await fetch(
-					'https://www.iclassifier.pw/api/jseshrender/?height=50&centered=true&mdc=' + clfKeyMDC
+					'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
 				);
 				if (!response.ok) {
 					// Failed to visualise MdC
