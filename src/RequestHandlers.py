@@ -459,7 +459,7 @@ def holisticadd_token(app, access, request, conn, c):
 
             # Purge orphaned auxiliary records, first of all old
             # classifier pictures.
-            TP.purge_dead_records(conn, c)
+            # TP.purge_dead_records(conn, c)
             return update_successful(app)
 
         except sqlite3.Error as e:

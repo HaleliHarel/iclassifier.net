@@ -34,22 +34,22 @@ async function downloadThesauri() {
 }
 
 async function downloadThesauriEgyptian() {
-    if (testing) {
-        scriptThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/scripts.json');
-        genreThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/genres.json');
-        objectTypeThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/object-types.json');
-        periodThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/dating-periods.json');
-        chronoThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/dating-chrono.json');
-        locationThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/location.json');
-    }
-    else {
-        scriptThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/scripts.json');
-        genreThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/genres.json');
-        objectTypeThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/object-types.json');
-        periodThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-periods.json');
-        chronoThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-chrono.json');
-        locationThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/location.json');
-    }
+    // if (testing) {
+    //     scriptThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/scripts.json');
+    //     genreThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/genres.json');
+    //     objectTypeThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/object-types.json');
+    //     periodThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/dating-periods.json');
+    //     chronoThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/dating-chrono.json');
+    //     locationThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/location.json');
+    // }
+    // else {
+    scriptThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/scripts.json');
+    genreThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/genres.json');
+    objectTypeThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/object-types.json');
+    periodThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-periods.json');
+    chronoThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-chrono.json');
+    locationThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/location.json');
+    // }
 }
 
 async function downloadThesauriCuneiform() { }

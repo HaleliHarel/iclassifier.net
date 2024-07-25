@@ -1,0 +1,104 @@
+@font-face {
+    font-family: 'hierofont';
+    src: url("https://eurphon.info/static/fonts/EgyptianHiero.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'antinoou';
+    src: url("https://eurphon.info/static/fonts/Antinoou.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'cuneiform';
+    src: url('https://eurphon.info/static/fonts/CuneiformComposite.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('https://eurphon.info/static/fonts/Roboto.woff') format('woff');
+}
+
+.chinese {
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.hieroglyphic {
+    font-family: 'hierofont', sans-serif;
+	font-size: 16pt;
+}
+
+.unicode-egyptian {
+	font-family: 'Roboto', sans-serif;
+	font-size: 12pt;
+}
+
+.cuneiform {
+    font-family: 'cuneiform', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding-bottom: 40px;
+    background-color: lightgrey;
+    font-family: 'Raleway', sans-serif;
+	font-size: 11pt;
+}
+
+h4 {
+	display: inline-block;
+}
+
+button {
+	font-size: 11pt;
+}
+
+option {
+	font-size: 11pt;
+}
+
+select {
+	font-size: 11pt;
+}
+
+div#main {
+    padding-left: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+div#report-main {
+	margin: 15px;
+	margin-left: 0;
+}
+
+div#button-row {
+	margin-bottom: 10px;
+}
+
+table.stats {
+	border-collapse: collapse;
+	table-layout: fixed;
+	/*width: 640px;*/
+	width: 100%;
+	border-top: 1px dotted black;
+	border-bottom: 1px dotted black;
+	max-height: 400px;
+	overflow: auto;
+}
+
+table.stats tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table.stats tr:nth-child(odd) {
+    background-color: white;
+}
+
+
+table.stats tr {
+	padding: 5px;
+}
+
+.clf-span:hover {
+	color: red;
+	cursor: pointer;
+}

@@ -107,7 +107,7 @@ def get_projects_for_user(user_id, connection):
         # print(access_level)
         if access_level is not None:
             result.append(
-                {'value': project_tag, 'label': project_title}
+                {'value': project_tag, 'label': project_title, 'access': access_level}
             )
     return result
 

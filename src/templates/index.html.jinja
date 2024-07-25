@@ -14,18 +14,32 @@
 
     <p>{{ user_name }}’s dashboard.</p>
 
-    <p>Available projects:</p>
+    <p>Projects available for editing or auditing:</p>
 
     <form method="POST" action="/input/project">
       <select class="project-select" name="project">
       {% for project in projects %}
-        <option value="{{ project.value }}">{{ project.label }}</option>
+        <option value="{{ project.value }}">{{ project.label }} ({{ project.access }})</option>
       {% endfor %}
       </select>
       <br/>
       <input type="submit" value="Open project">
     </form>
     <br/>
+
+    <p>Available project reports (TESTING):</p>
+
+    <form method="POST" action="/reports/project">
+      <select class="project-select" name="project">
+      {% for project in projects_w_reports %}
+        <option value="{{ project.value }}">{{ project.label }}</option>
+      {% endfor %}
+      </select>
+      <br/>
+      <input type="submit" value="Open project report">
+    </form>
+    <br/>
+
     <form method="POST" action="/input/logout">
         <input type="submit" value="Logout">
     </form>

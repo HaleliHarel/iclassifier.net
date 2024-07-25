@@ -89,9 +89,12 @@ def index():
     user_id = current_user.get_id()
     projects = utils.get_projects_for_user(int(user_id),
                                            authentication.dbconn)
+    # TODO: add projects with public reports
+    projects_w_reports = projects
     # print(user_id, projects)
     return flask.render_template('index.html.jinja',
                                  projects=projects,
+                                 projects_w_reports=projects_w_reports,
                                  user_name=current_user.name)
 
 

@@ -290,7 +290,7 @@ async function submitLemma(menu_idx) {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
-            credentials: testing ? 'omit' : 'include',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'text/plain'
             },
