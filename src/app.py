@@ -24,7 +24,8 @@ with open('../data/auth/jwtsecretkey', 'r', encoding='utf-8') as inp:
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-BASE_URL = 'https://iclassifier.click'
+# BASE_URL = 'https://iclassifier.click'
+BASE_URL = 'https://iclassifier.pw'
 USER_DB = {
     str(user_id): users.User(username, user_id)
     for user_id, username in authentication.cursor.execute(
@@ -38,6 +39,7 @@ USER_DB_INV = {
 
 @login_manager.unauthorized_handler
 def unauthorized():
+    print('Unauthorised access')
     return flask.redirect(f'{BASE_URL}/input/login')
 
 
@@ -81,7 +83,8 @@ def set_user_authenticated(user_id):
     user.authenticated = True
 
 
-@app.route('/index')
+# @app.route('/index')
+@app.route('/input')
 @app.route('/')
 @login_required
 def index():
@@ -117,15 +120,18 @@ def login():
         authentication_status, user_id = authentication.authenticate_user(
             username, password)
         if authentication_status == authentication.AuthStatus.NO_USER:
+            print(f'No such user: "{username}".')
             flask.flash(f'No such user: "{username}".')
             return flask.redirect(f'{BASE_URL}/input/login')
         elif authentication_status == authentication.AuthStatus.INCORRECT_PASSWORD:
+            print('Incorrect password.')
             flask.flash('Incorrect password.')
             return flask.redirect(f'{BASE_URL}/input/login')
         set_user_authenticated(str(user_id))
         # TODO: Check if the user is an admin and set the flag
         user = load_user(str(user_id))
         login_user(user)
+        print(f'Logged in successfully: {user_id} is {user.is_authenticated()}')
         flask.flash('Logged in successfully.')
 
         response = flask.redirect(f'{BASE_URL}/input')
@@ -145,6 +151,7 @@ def login():
 def project_redirect():
     project_tag = flask.request.form['project']
     return flask.redirect(f'{BASE_URL}/input/project/{project_tag}')
+
 
 @app.route("/projectreport", methods=['POST'])
 @login_required

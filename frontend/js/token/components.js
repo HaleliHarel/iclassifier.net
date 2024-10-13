@@ -916,9 +916,11 @@ function getClfPicDivGenerator(menu_idx, idx) {
         m('input[type=button]', {
             value: 'Show in context',
             onclick: () => {
-                showPicInContextData.base64 = witnessPicDict[clfPicInfo.witness_picture_id].base64;
-                showPicInContextData.coords = clfPicInfo.coords;
-                show_in_context_overlay = true;
+                if (witnessPicDict[clfPicInfo.witness_picture_id] !== undefined) {
+                    showPicInContextData.base64 = witnessPicDict[clfPicInfo.witness_picture_id].base64;
+                    showPicInContextData.coords = clfPicInfo.coords;
+                    show_in_context_overlay = true;
+                }
             }
         }),
         m('br'),

@@ -1,7 +1,8 @@
 let typingTimeout = null;
 
 // const jseshURL = 'https://www.iclassifier.pw/api/jseshrender/?height=32&mdc=';
-const jseshURL = 'https://iclassifier.click/jsesh?height=32&mdc=';
+// const jseshURL = 'https://iclassifier.click/jsesh?height=32&mdc=';
+const jseshURL = 'https://iclassifier.pw/jsesh?height=32&mdc=';
 
 function byID(id) {
     return document.getElementById(id);

@@ -1,7 +1,8 @@
 import json
 
 
-ORIGIN = 'iclassifier.click'
+# ORIGIN = 'iclassifier.click'
+ORIGIN = 'iclassifier.pw'
 # Possible actions
 GET_ACTIONS = [
     'all',
