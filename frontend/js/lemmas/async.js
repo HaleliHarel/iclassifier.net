@@ -370,7 +370,8 @@ async function downloadConcepticon() {
     // Do not download Concepticon more than once.
     if (menu_data_cache.concepts.length > 0)
         return;
-    const response = await fetch('https://www.iclassifier.pw/static/thesauri/allconcepts.json');
+    // const response = await fetch('https://www.iclassifier.pw/static/thesauri/allconcepts.json');
+    const response = await fetch('https://iclassifier.click/static/thesauri/allconcepts.json');
     if (!response.ok) {
         const error = await response.text();
         alert(`Could not download Concepticon concepts: ${error}`);

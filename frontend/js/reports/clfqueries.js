@@ -122,9 +122,9 @@ function getTokens(counter) {
     return result;
 }
 
-function getClfReportLink(clf) {
-    return `<a href="https://www.iclassifier.pw/reports/#!${project}/classifiers/${clf}" target="_blank">${clf}</a>`
-}
+// function getClfReportLink(clf) {
+//     return `<a href="https://www.iclassifier.pw/reports/#!${project}/classifiers/${clf}" target="_blank">${clf}</a>`
+// }
 
 function getRows(counter) {
     let result = [];

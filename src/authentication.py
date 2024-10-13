@@ -52,22 +52,42 @@ def get_project_info(project_tag):
 
 
 def check_user_access(user_id, project_tag):
-    try:
-        project_id = cursor.execute(
-            'SELECT id FROM `project_info` WHERE `project_id` = ?',
-            (project_tag,)
-        ).fetchone()[0]
-    except Exception as e:
-        print(f'Error: {e}')
+    # TODO: convert to proper SQL code later
+    project_id = None
+    for project_id_, project_tag_ in cursor.execute(
+            "SELECT id, `project_id` FROM `project_info`"
+        ):
+        if project_tag_ == project_tag:
+            project_id = project_id_
+            break
+    else:
+        print(f'Could not find the id for the project {project_tag}')
         return None
+
+    for permission, project_id_, user_id_ in cursor.execute(
+            'SELECT type, `project_id`, `user_id` FROM permissions'
+        ):
+        if project_id_ == project_id and str(user_id_) == user_id:
+            return permission
+    else:
+        print(f'Could not find permission for {user_id=}, {project_id=}, and {project_tag=}')
+        return None
+
+    # try:
+    #     project_id = cursor.execute(
+    #         f"SELECT id FROM `project_info` WHERE `project_id` = '{project_tag}'"
+    #     ).fetchone()[0]
+    # except Exception as e:
+    #     print(f'Error while obtaining project id: {e}')
+    #     return None
     
-    try:
-        return cursor.execute(
-            '''SELECT type FROM permissions 
-               WHERE `project_id` = ?
-               AND `user_id` = ?''',
-            (project_id, user_id)
-        ).fetchone()[0]
-    except Exception as e:
-        print(f'Error: {e}')
-        return None
+    # try:
+    #     return cursor.execute(
+    #         f'''SELECT type FROM permissions 
+    #            WHERE `project_id` = ?
+    #            AND `user_id` = ?''',
+    #         (project_id, int(user_id))
+    #     ).fetchone()[0]
+    # except Exception as e:
+    #     print(f'Error while checking permissions: {e}')
+    #     return None

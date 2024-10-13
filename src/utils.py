@@ -155,3 +155,14 @@ def check_objects_table(connection, cursor, table_name):
                 `tla_data` text -- json-encoded information from TLA; by default read only
             )""")
     connection.commit()
+
+
+def get_project_id(project_tag, connection):
+    cursor = connection.cursor()
+    try:
+        return cursor.execute(
+            f"SELECT id FROM `project_info` WHERE `project_id` = '{project_tag}'"
+        ).fetchone()[0]
+    except Exception as e:
+        print(f'Error while obtaining project id: {e}')
+        return None

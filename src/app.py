@@ -221,6 +221,22 @@ def info(project_tag):
     return resp
 
 
+@app.route('/<project_tag>/getxlsx', methods=['GET'])
+@token_required
+def excel_handler(project_tag):
+    user_id = current_user.get_id()
+    auth_conn = sqlite3.connect(f'../data/auth/auth.sqlite')
+    project_id = utils.get_project_id(project_tag, auth_conn)
+    access = utils.get_access_level(user_id, project_id, auth_conn)
+    # access = authentication.check_user_access(user_id, project_tag)
+    # print(user_id, project_tag, access)
+    if access is None:
+        return RH.no_read_access(app)
+    conn = sqlite3.connect(f'../data/projects/{project_tag}/clf.db')
+    cursor = conn.cursor()
+    return RH.getxlsx(app, project_tag, cursor)
+
+
 @app.route('/<project_tag>/<table_name>/<action>', methods=['POST', 'GET'])
 @token_required
 def request_handler(project_tag, table_name, action):
