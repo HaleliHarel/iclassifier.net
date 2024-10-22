@@ -213,7 +213,8 @@ function getGlyphs() {
 }
 
 async function getBase64(key) {
-    const response = await fetch(`https://iclassifier.click/jsesh/?height=20&centered=true&mdc=${key}`);
+    // const response = await fetch(`https://iclassifier.click/jsesh/?height=20&centered=true&mdc=${key}`);
+    const response = await fetch(`https://iclassifier.pw/jsesh/?height=20&centered=true&mdc=${key}`);
     if (!response.ok)
         return;
     const data = await response.text();

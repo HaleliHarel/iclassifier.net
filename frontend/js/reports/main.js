@@ -1,7 +1,9 @@
 // const authURL = 'https://www.iclassifier.pw/api/authserver',
 // const authURL = 'http://127.0.0.1:21000',
-const requestURL = 'https://iclassifier.click/api/readonly',
-	jseshURL = 'https://iclassifier.click/jsesh/?mdc=';
+// const requestURL = 'https://iclassifier.click/api/readonly',
+// 	jseshURL = 'https://iclassifier.click/jsesh/?mdc=';
+const requestURL = 'https://iclassifier.pw/api/readonly',
+	jseshURL = 'https://iclassifier.pw/jsesh/?mdc=';
 
 let path = null,
 	project = null,
@@ -405,9 +407,9 @@ function populateClfDict() {
 		// Witness metadata
 		if (clfQueries.witnessId !== 'any' &&
 			!selectedWitnesses.has(String(tokenInfo.witness_id))) {
-				// console.log(clfQueries.witnessId, tokenInfo.witness_id);
-				continue;
-			}
+			// console.log(clfQueries.witnessId, tokenInfo.witness_id);
+			continue;
+		}
 		// console.log('Witness meta checked passed.');
 
 		let witnessInfo = {
