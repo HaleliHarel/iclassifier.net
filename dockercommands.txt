@@ -1,0 +1,1 @@
+docker run -it --network host --mount type=bind,src="$(pwd)/data",target="/home/iclassifier/data" --name iclfbackend iclfpod
