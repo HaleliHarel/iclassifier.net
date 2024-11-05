@@ -85,6 +85,13 @@ def description_to_data(descr_dict, include_id=False, item_id=None):
 # Pre-baked responses
 #
 
+def no_read_access(app):
+    with app.app_context():
+        resp = make_response('User does not have reading access', 401)
+    populate_headers_plain(resp)
+    return resp
+
+
 def no_write_access(app):
     with app.app_context():
         resp = make_response('User does not have writing access', 401)
@@ -185,7 +192,7 @@ def getxlsx(app, project_name, c):
                 send_file(
                     tmp.name,
                     as_attachment=True,
-                    attachment_filename=f'{project_name}-' +
+                    download_name=f'{project_name}-' +
                     f'{date.isoformat(date.today())}.xlsx'))
         return resp
 
@@ -459,7 +466,7 @@ def holisticadd_token(app, access, request, conn, c):
 
             # Purge orphaned auxiliary records, first of all old
             # classifier pictures.
-            TP.purge_dead_records(conn, c)
+            # TP.purge_dead_records(conn, c)
             return update_successful(app)
 
         except sqlite3.Error as e:

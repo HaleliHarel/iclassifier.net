@@ -92,7 +92,7 @@ async function biblioEditorSubmit(menu_idx) {
         },
         mode: 'cors',
         body: body,
-        credentials: testing ? 'omit' : 'include'
+        credentials: 'include'
     });
     if (!response.ok) {
         const error = await response.text();

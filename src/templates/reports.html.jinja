@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>iClassifier reports page</title>
+
+	<!-- Fonts and styles -->
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ css_store_url }}/style.css">
+	<link rel="stylesheet" href="{{ css_store_url }}/components.css">
+
+	<!-- Handsontable -->
+	<script src="{{ js_store_url }}/handsontable/handsontable.full.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ js_store_url }}/handsontable/handsontable.full.min.css">
+
+	<!-- JavaScript -->
+	<script src="{{ js_store_url }}/mdc2uni.js"></script>
+	<script src="{{ js_store_url }}/vis.js"></script>
+	<script src="{{ js_store_url }}/mithril.js"></script>
+	<script src="{{ js_store_url }}/components.js"></script>
+	<script src="{{ js_store_url }}/main.js"></script>
+	<script src="{{ js_store_url }}/thesauri.js"></script>
+	<script src="{{ js_store_url }}/clfreport.js"></script>
+	<script src="{{ js_store_url }}/clfqueries.js"></script>
+	<script src="{{ js_store_url }}/lemmareport.js"></script>
+	<script src="{{ js_store_url }}/tokenstats.js"></script>
+	<script src="{{ js_store_url }}/map.js"></script>
+	<script src="{{ js_store_url }}/view.js"></script>
+
+	<script>
+		project = "{{ project_tag }}";
+		projectType = "{{ project_type }}";
+	</script>
+</head>
+
+<body>
+	<header
+		style="display: flex; justify-content: space-between; background-color: black; vertical-align: middle; width: 100%; margin: 0; margin-bottom: 10px; padding-left: 20px;">
+		<div>
+			<h1 style="color: white;">Reports</h1>
+		</div>
+		<div style="display: block; height: 100%; margin-right: 30px;">
+			<img alt="iClassifier logo" src="{{ static_store_url }}/img/iclassifier-logo-new.png"
+				style="height: 50px; vertical-align: middle; margin-top: 13px;">
+		</div>
+	</header>
+	<div id="main" style="margin-top: 20px;">
+		<form action="{{ base_url }}/reports">
+            <input type="submit" value="Go to the project list" />
+        </form>
+		<!-- <h4><label for="project-select">Select a project:</label></h4>
+		<select id="project-select" style="width: 250px; margin-left: 5px; margin-right: 15px;"
+			onchange="clfCounts = {}; lemmasForClfs = {}; switchProjectWrapper(this);">
+			<option value="---" disabled selected>---</option>
+		</select> -->
+		<div id="report"></div>
+	</div>
+	<script>
+		let root = byID('report');
+		m.mount(root, report);
+		loadData();
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+.menu-wrapper {
+    display: none;
+    width: 250px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    padding: 3px;
+    background-color: white;
+}
+.float_menu_header {
+    grid-row: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+.inner-menu {
+    display: grid;
+    row-gap: 3px;
+    margin-top: 3px;
+    max-height: 300px;
+    overflow: auto;
+}
+.menu-button-value {
+    border-radius: 1px;
+    padding: 2px;
+    background-color: #B2DFDB;
+    cursor: pointer;
+}
+.menu-button-value:hover {
+    background-color: darkgoldenrod;
+    color: white;
+}

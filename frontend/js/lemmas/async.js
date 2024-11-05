@@ -1,5 +1,6 @@
 // const dictionaryAPIURL = 'https://www.iclassifier.pw/api/dictserver';
-const dictionaryAPIURL = 'https://iclassifier.click/dictionary';
+// const dictionaryAPIURL = 'https://iclassifier.click/dictionary';
+const dictionaryAPIURL = 'https://iclassifier.pw/dictionary';
 
 /**
  * The callback is used to add default dictionary values
@@ -290,7 +291,7 @@ async function submitLemma(menu_idx) {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
-            credentials: testing ? 'omit' : 'include',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'text/plain'
             },
@@ -370,7 +371,8 @@ async function downloadConcepticon() {
     // Do not download Concepticon more than once.
     if (menu_data_cache.concepts.length > 0)
         return;
-    const response = await fetch('https://www.iclassifier.pw/static/thesauri/allconcepts.json');
+    const response = await fetch('https://iclassifier.pw/static/thesauri/allconcepts.json');
+    // const response = await fetch('https://iclassifier.click/static/thesauri/allconcepts.json');
     if (!response.ok) {
         const error = await response.text();
         alert(`Could not download Concepticon concepts: ${error}`);

@@ -1,0 +1,6 @@
+data/auth
+data/projects
+data/project_types.json
+.idea
+.venv
+*.sh

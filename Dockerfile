@@ -1,11 +1,11 @@
 FROM alpine:3.14
 
 RUN apk add --no-cache python3 py3-pip
-RUN pip install flask flask_login WTForms gunicorn openpyxl
+RUN pip install flask flask_login WTForms gunicorn openpyxl pyjwt
 
 RUN addgroup -S appgroup && adduser -S iclassifier -G appgroup
 USER iclassifier
-ENV HOME /home/iclassifier
+ENV HOME=/home/iclassifier
 
 #COPY data/auth $HOME/data/auth
 COPY src/* $HOME/src/
