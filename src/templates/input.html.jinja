@@ -10,14 +10,14 @@
 
     <script>
     console.log('Setting variables for the frontend...');
-    const siteURL = '{{ base_url }}',
-            dbAPIURL = '{{ base_url }}/api/{{ project_tag }}',
-            dbAPIURLCommon = '{{ base_url }}/api',
-            biblioAPIURL = '{{ base_url }}/api/biblio',
-            xlsxURL = '{{ base_url }}/api/{{ project_tag }}/getxlsx',
-            projectTag = '{{ project_tag }}',
-            projectType = '{{ project_type }}',
-            projectTitle = '{{ project_title }}',
+    const siteURL = `{{ base_url }}`,
+            dbAPIURL = `{{ base_url }}/api/{{ project_tag }}`,
+            dbAPIURLCommon = `{{ base_url }}/api`,
+            biblioAPIURL = `{{ base_url }}/api/biblio`,
+            xlsxURL = `{{ base_url }}/api/{{ project_tag }}/getxlsx`,
+            projectTag = `{{ project_tag }}`,
+            projectType = `{{ project_type }}`,
+            projectTitle = `{{ project_title }}`,
             userIsAdmin = {{ user_is_admin }};
     console.log('Done.');
 
