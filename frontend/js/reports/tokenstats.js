@@ -2,6 +2,7 @@ let tokenStatsData = {
   total: 0,
   classified: 0,
   clfByPOS: {},
+  lemmas: 0,
 };
 
 let tokenStats = {
@@ -55,8 +56,9 @@ let tokenStats = {
             m("br"),
             m("p", `Total number of tokens: ${tokenStatsData.total}`),
             m("p", `Classified tokens: ${tokenStatsData.classified}`),
+            m("p", `Distinct lemmas: ${tokenStatsData.lemmas}`),
             m("br"),
-            m("h5", "Classified tokens by part of speech"),
+            m("h4", "Classified tokens by part of speech"),
             (() => {
               // POSArr from thesauri.js
               const POSArr = [
@@ -116,7 +118,7 @@ let tokenStats = {
                     m(
                       "th",
                       { style: { border: "1px solid #ccc", padding: "4px" } },
-                      "POS (Full Name)",
+                      "Part of speech",
                     ),
                     m(
                       "th",
@@ -184,6 +186,8 @@ function getTokenStats(witness) {
   tokenStatsData.total = 0;
   tokenStatsData.classified = 0;
   tokenStatsData.clfByPOS = {};
+  // Track unique lemma_ids
+  const lemmaSet = new Set();
   for (const key in tokenData) {
     if (!tokenData.hasOwnProperty(key)) continue;
     if (
@@ -201,10 +205,16 @@ function getTokenStats(witness) {
       } else {
         tokenStatsData.clfByPOS[pos].unclassified += 1;
       }
+      // Track lemma_id if present and not empty
+      const lemmaId = tokenData[key].lemma_id;
+      if (lemmaId !== undefined && lemmaId !== null && lemmaId !== "") {
+        lemmaSet.add(lemmaId);
+      }
       // if (tokenData[key].classification_status === 'CL')
       // 	tokenStatsData.classified += 1;
     }
   }
+  tokenStatsData.lemmas = lemmaSet.size;
 }
 
 function isClassified(tokenId) {
