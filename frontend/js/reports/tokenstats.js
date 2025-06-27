@@ -1,6 +1,7 @@
 let tokenStatsData = {
   total: 0,
   classified: 0,
+  clfByPOS: {},
 };
 
 let tokenStats = {
@@ -54,6 +55,50 @@ let tokenStats = {
             m("br"),
             m("p", `Total number of tokens: ${tokenStatsData.total}`),
             m("p", `Classified tokens: ${tokenStatsData.classified}`),
+            m("br"),
+            m("h5", "Classified tokens by part of speech"),
+            m(
+              "table",
+              { style: { borderCollapse: "collapse", width: "60%" } },
+              [
+                m("tr", [
+                  m(
+                    "th",
+                    { style: { border: "1px solid #ccc", padding: "4px" } },
+                    "POS",
+                  ),
+                  m(
+                    "th",
+                    { style: { border: "1px solid #ccc", padding: "4px" } },
+                    "Classified",
+                  ),
+                  m(
+                    "th",
+                    { style: { border: "1px solid #ccc", padding: "4px" } },
+                    "Unclassified",
+                  ),
+                ]),
+                Object.entries(tokenStatsData.clfByPOS).map(([pos, stats]) =>
+                  m("tr", [
+                    m(
+                      "td",
+                      { style: { border: "1px solid #ccc", padding: "4px" } },
+                      pos,
+                    ),
+                    m(
+                      "td",
+                      { style: { border: "1px solid #ccc", padding: "4px" } },
+                      stats.classified,
+                    ),
+                    m(
+                      "td",
+                      { style: { border: "1px solid #ccc", padding: "4px" } },
+                      stats.unclassified,
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -86,26 +131,26 @@ function getWitnessMenuData() {
 function getTokenStats(witness) {
   tokenStatsData.total = 0;
   tokenStatsData.classified = 0;
-  if (witness === "all") {
-    for (const key in tokenData) {
-      if (!tokenData.hasOwnProperty(key)) continue;
+  tokenStatsData.clfByPOS = {};
+  for (const key in tokenData) {
+    if (!tokenData.hasOwnProperty(key)) continue;
+    if (
+      witness === "all" ||
+      String(tokenData[key].witness_id) === String(witness)
+    ) {
       tokenStatsData.total += 1;
+      const pos = tokenData[key].pos || "UNKNOWN";
+      if (!tokenStatsData.clfByPOS.hasOwnProperty(pos)) {
+        tokenStatsData.clfByPOS[pos] = { classified: 0, unclassified: 0 };
+      }
       if (isClassified(key)) {
         tokenStatsData.classified += 1;
+        tokenStatsData.clfByPOS[pos].classified += 1;
+      } else {
+        tokenStatsData.clfByPOS[pos].unclassified += 1;
       }
       // if (tokenData[key].classification_status === 'CL')
-    }
-  } else {
-    for (const key in tokenData) {
-      if (!tokenData.hasOwnProperty(key)) continue;
-      if (String(tokenData[key].witness_id) === String(witness)) {
-        tokenStatsData.total += 1;
-        if (isClassified(key)) {
-          tokenStatsData.classified += 1;
-        }
-        // if (tokenData[key].classification_status === 'CL')
-        // 	tokenStatsData.classified += 1;
-      }
+      // 	tokenStatsData.classified += 1;
     }
   }
 }
