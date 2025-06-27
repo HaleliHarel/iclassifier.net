@@ -57,48 +57,100 @@ let tokenStats = {
             m("p", `Classified tokens: ${tokenStatsData.classified}`),
             m("br"),
             m("h5", "Classified tokens by part of speech"),
-            m(
-              "table",
-              { style: { borderCollapse: "collapse", width: "60%" } },
-              [
-                m("tr", [
-                  m(
-                    "th",
-                    { style: { border: "1px solid #ccc", padding: "4px" } },
-                    "POS",
-                  ),
-                  m(
-                    "th",
-                    { style: { border: "1px solid #ccc", padding: "4px" } },
-                    "Classified",
-                  ),
-                  m(
-                    "th",
-                    { style: { border: "1px solid #ccc", padding: "4px" } },
-                    "Unclassified",
-                  ),
-                ]),
-                Object.entries(tokenStatsData.clfByPOS).map(([pos, stats]) =>
+            (() => {
+              // POSArr from thesauri.js
+              const POSArr = [
+                ['any', 'Any'],
+                ['ADJ', 'Adjective'],
+                ['ADV', 'Adverb'],
+                ['CONJ', 'Conjunction'],
+                ['DET', 'Determiner'],
+                ['DEV', 'Deverbal'],
+                ['DN', 'Divine name'],
+                ['N', 'Noun'],
+                ['NUM', 'Numeral'],
+                ['FN', 'Other function word'],
+                ['PART', 'Particle'],
+                ['POSTP', 'Postposition'],
+                ['PREP', 'Preposition'],
+                ['PRON', 'Pronoun'],
+                ['PN', 'Proper name'],
+                ['TN', 'Toponym'],
+                ['VB', 'Verb'],
+                ['not set', 'Not set']
+              ];
+
+              // Build POS name map
+              const posNameMap = {};
+              POSArr.forEach(([abbr, fullname]) => {
+                posNameMap[abbr.toUpperCase()] = fullname;
+              });
+              posNameMap["UNK"] = "Unknown";
+
+              // Gather and normalize POS keys
+              const clfByPOS = tokenStatsData.clfByPOS || {};
+              const posStats = {};
+              Object.entries(clfByPOS).forEach(([pos, stats]) => {
+                let norm = (typeof pos === "string" ? pos.trim().toUpperCase() : "");
+                if (norm === "" || norm === "NOT SET" || norm === "UNKNOWN") {
+                  norm = "UNK";
+                }
+                if (!posStats[norm]) {
+                  posStats[norm] = { classified: 0, unclassified: 0 };
+                }
+                posStats[norm].classified += stats.classified;
+                posStats[norm].unclassified += stats.unclassified;
+              });
+
+              // Sort POS alphabetically, UNK last
+              const sortedPOS = Object.keys(posStats)
+                .filter(p => p !== "UNK")
+                .sort()
+                .concat(Object.keys(posStats).includes("UNK") ? ["UNK"] : []);
+
+              return m(
+                "table",
+                { style: { borderCollapse: "collapse", width: "60%" } },
+                [
                   m("tr", [
                     m(
-                      "td",
+                      "th",
                       { style: { border: "1px solid #ccc", padding: "4px" } },
-                      pos,
+                      "POS (Full Name)",
                     ),
                     m(
-                      "td",
+                      "th",
                       { style: { border: "1px solid #ccc", padding: "4px" } },
-                      stats.classified,
+                      "Classified",
                     ),
                     m(
-                      "td",
+                      "th",
                       { style: { border: "1px solid #ccc", padding: "4px" } },
-                      stats.unclassified,
+                      "Unclassified",
                     ),
                   ]),
-                ),
-              ],
-            ),
+                  ...sortedPOS.map(pos =>
+                    m("tr", [
+                      m(
+                        "td",
+                        { style: { border: "1px solid #ccc", padding: "4px" } },
+                        `${pos} (${posNameMap[pos] || "Unknown"})`,
+                      ),
+                      m(
+                        "td",
+                        { style: { border: "1px solid #ccc", padding: "4px" } },
+                        posStats[pos].classified,
+                      ),
+                      m(
+                        "td",
+                        { style: { border: "1px solid #ccc", padding: "4px" } },
+                        posStats[pos].unclassified,
+                      ),
+                    ])
+                  ),
+                ]
+              );
+            })(),
           ],
         ),
       ],
