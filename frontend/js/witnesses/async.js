@@ -50,23 +50,23 @@ async function downloadThesauriEgyptian() {
     // chronoThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-chrono.json');
     // locationThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/location.json');
 
-    scriptThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/scripts.json');
-    genreThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/genres.json');
-    objectTypeThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/object-types.json');
-    periodThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/dating-periods.json');
-    chronoThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/dating-chrono.json');
-    locationThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/egyptian/location.json');
+    scriptThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/scripts.json');
+    genreThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/genres.json');
+    objectTypeThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/object-types.json');
+    periodThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/dating-periods.json');
+    chronoThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/dating-chrono.json');
+    locationThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/location.json');
     // }
 }
 
 async function downloadThesauriCuneiform() { }
 
 async function downloadThesauriChinese() {
-    // scriptThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/chinese/scripts.json');
-    // genreThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/chinese/genres.json');
+    scriptThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/chinese/scripts.json');
+    genreThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/chinese/genres.json');
 
-    scriptThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/chinese/scripts.json');
-    genreThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/chinese/genres.json');
+    // scriptThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/chinese/scripts.json');
+    // genreThesaurus = await getJSONFromURL('https://iclassifier.click/static/thesauri/chinese/genres.json');
 }
 
 async function loadWitnessInfo(menu_idx, id) {

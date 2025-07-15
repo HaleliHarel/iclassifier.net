@@ -465,7 +465,7 @@ async function drawLemmaClfGraph(lemma) {
 			}
 			try {
 				const response = await fetch(
-					'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
+					'https://iclassifier.pw/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
 				);
 				if (!response.ok) {
 					// Failed to visualise MdC

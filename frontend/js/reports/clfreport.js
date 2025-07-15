@@ -529,7 +529,7 @@ async function drawLemmaGraph(clf) {
 	if (projectType === 'hieroglyphic' && (baseGlyph === clf || !useUnicode)) {
 		try {
 			const response = await fetch(
-				'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + mdc
+				'https://iclassifier.pw/jsesh/?height=50&centered=true&mdc=' + mdc
 			);
 			if (!response.ok)
 				nodes.add({ id: 1, label: clf, color: { background: 'beige' } });
@@ -678,7 +678,7 @@ async function drawClfGraph(clf) {
 	if (projectType === 'hieroglyphic' && (baseGlyph === mdc || !useUnicode)) {
 		try {
 			const response = await fetch(
-				'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + mdc
+				'https://iclassifier.pw/jsesh/?height=50&centered=true&mdc=' + mdc
 			);
 			if (!response.ok)
 				nodes.add({ id: 1, label: clf, color: { background: 'beige' } });
@@ -736,7 +736,7 @@ async function drawClfGraph(clf) {
 			}
 			try {
 				const response = await fetch(
-					'https://iclassifier.click/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
+					'https://iclassifier.pw/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
 				);
 				if (!response.ok) {
 					// Failed to visualise MdC
