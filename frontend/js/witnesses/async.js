@@ -43,6 +43,7 @@ async function downloadThesauriEgyptian() {
     //     locationThesaurus = await getJSONFromURL('http://127.0.0.1:30000/egyptian/location.json');
     // }
     // else {
+
     // scriptThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/scripts.json');
     // genreThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/genres.json');
     // objectTypeThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/object-types.json');
@@ -50,6 +51,12 @@ async function downloadThesauriEgyptian() {
     // chronoThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/dating-chrono.json');
     // locationThesaurus = await getJSONFromURL('https://www.iclassifier.pw/static/iclthesauri/egyptian/location.json');
 
+    scriptThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/scripts.json');
+    genreThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/genres.json');
+    objectTypeThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/object-types.json');
+    periodThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/dating-periods.json');
+    chronoThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/dating-chrono.json');
+    locationThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/location.json');
     scriptThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/scripts.json');
     genreThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/genres.json');
     objectTypeThesaurus = await getJSONFromURL('https://iclassifier.pw/static/thesauri/egyptian/object-types.json');
