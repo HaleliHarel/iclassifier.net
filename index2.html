@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base href="/Users/halel/web/website/" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href='style.css'>
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+
+    <title>The homepage of the iClassifier project</title>
+    <title>Video Embed</title>
+
+    <style>
+        /* Reset margins and padding for body */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center the iframe container */
+        .iframe-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            width: 100%;
+            margin: 0;
+        }
+
+        iframe {
+            border: none;
+        }
+
+        /* Header layout */
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        #logo img {
+            width: 150px;
+        }
+
+        #title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #menuLinks {
+            display: flex;
+            flex-direction: column; /* Stack menu links vertically */
+        }
+
+        #menuLinks a {
+            margin-bottom: 5px;
+        }
+
+        /* Main content styling */
+        #main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2, h3 {
+            margin-top: 20px;
+        }
+
+        /* Footer layout */
+        #footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        #footer img {
+            max-width: 100px;
+            margin-right: 10px;
+        }
+    </style>
+
+    <script>
+        function loopVideo() {
+            const iframe = document.querySelector('iframe');
+            const player = iframe.contentWindow; // Access the iframe's content
+
+            // Check if the player is ready
+            if (player) {
+                if (typeof player.postMessage === 'function') {
+                    player.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+
+                    setInterval(() => {
+                        player.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+                    }, 1); // Loop indefinitely
+                }
+            } else {
+                setTimeout(loopVideo, 100); // Retry every 100 milliseconds
+            }
+        }
+
+        window.addEventListener('load', loopVideo);
+    </script>
+
+</head>
+
+<body>
+    <div id="header">
+        <div id="logo">
+            <img src="images/iCL_logo_clean.png" alt="iClassifier logo">
+        </div>
+        <div id="title">
+            <span id="titleSpan">A platform for scientific analysis of classifier scripts and languages</span>
+        </div>
+        <div id="menu">
+            <div id="menuLinks">
+                <a href="index.html">News</a> <span class="small">|</span>
+                <a href="iclassifier/index.html">iClassifier projects</a> <span class="small">|</span>
+                <a href="team/index.html">Team</a> <span class="small">|</span>
+                <a href="egyptianiclassifier/index.html">Egyptian- a pilot</a> <span class="small">|</span>
+                <a href="collaborations/index.html">Collaborations</a> <span class="small">|</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+        <!-- Move the iframe container below the content -->
+        <h2 id="iiclassifieri---a-new-tool-for-classifier-analysis">
+            i<!-- raw HTML omitted -->Classifier<!-- raw HTML omitted -->&mdash;a tool for classifier analysis
+        </h2>
+        
+        <h3 id="what-we-aim-for">What we aim for?</h3>
+        <p><strong>Aim 1:</strong></p>
+        <p>Aim 1: Creating a data driven classifier dictionaries. To create  “CLASSIFIER DICTIONARIES” of classifier systems. 
+            Each classifier will be optimally followed by all tokens that appear after it (its ‘host’ words). 
+            All classified meanings (CMs), calibrated statistically by their frequency of appearance with the word, 
+            will provide the semantic scope of the classifier’s category and its variabilities through diachronic perspectives.
+        </p>
+        <p> The dictionary user will receive clear information about the central and peripheral members in the knowledge structure. 
+            This “backward” dictionary may also be beneficial for philological work involving word reconstruction in broken or partially lost inscriptions.
+            Our classifier annotations include classifier analysis. The scheme of annotation includes adding, 
+            for each example, its type (taxonomic, schematic, repeater, etc.) and level (lexeme, word-form, referent, meta-textual). 
+            The tool enables the study of multi-classification across a large corpus of Egyptian lemmas and exposes the statistics of single classifiers 
+            and classifier combinations.
+            </p>
+        
+        <h3 id="dynamic-digital-and-growing">Dynamic, Digital and Growing!</h3>
+        <ul>
+            <li>
+                <p>Joint scholarly research: easy to contribute. You could send your example and it will be added to the
+                    database by us under your name. You can start your own project and decide if and when to share your
+                    data online.</p>
+            </li>
+            <li>
+                <p>Growing lemma list: if the lemma is already listed, you would just have to add your new token.
+                    Otherwise you simply type the common transliteration and reference (at least one dictionary) for a
+                    lemma, and then insert its token. Even if you will only feed the basic info, later you, or another
+                    researcher, could add more detailed analysis such as text type, date, syntax, register, etc.</p>
+            </li>
+            <li>
+                <p>Real sources: iClassifier invites you to add pictures of your source inscription&mdash;one could
+                    press on an example and reach the source image.</p>
+            </li>
+            <li>
+                <p>Track the story of a certain hieroglyph in the Egyptian script: iClassifier can open new horizons for
+                    the study of Egyptian hieroglyphs&mdash;by “search by classifier” in the database.
+                    For example, you may search “D40” <!-- raw HTML omitted -->𓂡<!-- raw HTML omitted --> and receive
+                    the current statistics of most frequent words classified by it, the genres it is mostly attested in
+                    and what semantic fields it classifies.</p>
+            </li>
+        </ul>
+
+        <!-- Center the iframe inside this div -->
+        <div class="iframe-container">
+            <iframe width="800" height="600" src="https://drive.google.com/file/d/1UEZvZAuJ7P9-ayUnk5ajidRynMQB56Jf/preview" 
+                    title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div id="footer">
+        © Goldwasser/Harel/Nikolaev 2019-2025
+        <div>
+            <img src="images/HUJI.png" alt="HUJI logo">
+            <img src="images/ISF.png" alt="ISF logo">
+        </div>
+    </div>
+</body>
+
+</html>

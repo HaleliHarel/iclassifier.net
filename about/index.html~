@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base href="/Users/halel/web/website/>
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href='style.css'>
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+
+
+    <title>The homepage of the iClassifier project</title>
+</head>
+
+<body>
+    <div id="header">
+        <div id="logo">
+            <img src="images/logo_transp.png" alt="iClassifier logo">
+        </div>
+        <div id="title">
+            <span id="titleSpan">A platform for scientific analysis of classifier scripts and languages</span>
+        </div>
+        <div id="menu">
+            <div id="menuLinks">
+                <a href="index.html">News</a> <span class="small">|</span>
+                <a href="iclassifier/index.html">iClassifier projects</a> <span class="small">|</span>
+                <a href="about/index.html">About</a> <span class="small">|</span>
+                <a href="egyptianiclassifier/index.html">Egyptian- a pilot</a> <span class="small">|</span>
+                <a href="classifierstudies/index.html">Classifier studies</a> <span class="small">|</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+
+
+        <h2 id="our-team">Our team</h2>
+        <h3 id="span-styletext-align-centerresearchspan"><!-- raw HTML omitted -->Research<!-- raw HTML omitted --></h3>
+        <ul>
+            <li>
+                <p><!-- raw HTML omitted -->Prof. Orly Goldwasser<!-- raw HTML omitted -->
+                    Institute of Archaeology and the Ancient Near East, Mount Scopus Campus, room 7715, Hebrew
+                    University of Jerusalem, Israel.
+                    Please write to: <a
+                        href="mailto:orly.goldwasser@mail.huji.ac.il">orly.goldwasser@mail.huji.ac.il</a>
+                    Homepage: <a href="http://www.orlygoldwasser.com/">http://www.orlygoldwasser.com/</a>
+                    <a href="https://huji.academia.edu/orlygoldwasser">https://huji.academia.edu/orlygoldwasser</a>
+                </p>
+            </li>
+            <li>
+                <p><!-- raw HTML omitted -->Dr. Haleli Harel<!-- raw HTML omitted -->
+                    Postdoctoral fellow, Institute of Archaeology, Hebrew University of Jerusalem.
+                    <a href="mailto:haleli.harel@mail.huji.ac.il">haleli.harel@mail.huji.ac.il</a>
+                    Haleli is the scientific coordinator of iClassifier. She is currently working on creating measures for comparing classifier networks and studying with iClassifier texts in Egyptian and in Kilivila.</a>
+                </p>
+            </li>
+        </ul>
+        <h3 id="span-styletext-align-centerdatabase-design-and-programmingspan"><!-- raw HTML omitted -->Database design
+            and programming<!-- raw HTML omitted --></h3>
+        <ul>
+            <li><!-- raw HTML omitted -->Dr. Dmitry Nikolaev<!-- raw HTML omitted -->
+                Lecturer, University of Manchester.
+                <a href="mailto:mail@dnikolaev.com">mail@dnikolaev.com</a>
+                Dmitry is creating the database and the user interface for the project.
+                Homepage: <a href="https://dnikolaev.com/">https://dnikolaev.com/</a>
+            </li>
+        </ul>
+        <!-- raw HTML omitted -->
+        <!-- raw HTML omitted -->
+        <p>The hieroglyphic spellings are imported from <strong>Ramses Online</strong> (<a
+                href="http://ramses.ulg.ac.be">http://ramses.ulg.ac.be</a>) and enriched with classifier analysis.</p>
+        <!-- raw HTML omitted -->
+        <!-- raw HTML omitted -->
+        <h3 id="span-styletext-align-centeriiclassifieri---ongoing-research-projectsspan">
+            <!-- raw HTML omitted -->i<!-- raw HTML omitted -->Classifier<!-- raw HTML omitted -->&mdash;Ongoing
+            research projects<!-- raw HTML omitted -->
+        </h3>
+        <ul>
+            <li>
+                <p>Marina Shama-Popovic, Hebrew University of Jerusalem.
+                    The Qadesh inscription as a case study for comparison of classification of Hieratic and Hieroglyphic
+                    scripts.</p>
+            </li>
+            <li>
+                <p>Dr. Simon Thuault
+                    <a href="http://hu-berlin.academia.edu/SimonThuault">http://hu-berlin.academia.edu/SimonThuault</a>
+                    Studying &lsquo;dissimilation graphique&rsquo; in Old Kingdom lexicon
+                </p>
+            </li>
+            <li>
+                <p>Susana Soler, University of Barcelona.</p>
+            </li>
+            <li>
+                <p>Christian Casey, Brown University.</p>
+            </li>
+        </ul>
+        <h4 id="span-styletext-align-centeradditional-collaborators-to-be-updated-soonspan">
+            <!-- raw HTML omitted -->Additional collaborators to be updated soon<!-- raw HTML omitted -->
+        </h4>
+        <!-- raw HTML omitted -->
+        <h3 id="span-styletext-align-centeriiclassifieri-advisory-boardspan">
+            <!-- raw HTML omitted -->i<!-- raw HTML omitted -->Classifier<!-- raw HTML omitted --> advisory
+            board<!-- raw HTML omitted -->
+        </h3>
+        <ul>
+            <li><!-- raw HTML omitted -->Prof. Colette Grinevald<!-- raw HTML omitted --> <a
+                    href="http://www.colettegrinevald.fr/">http://www.colettegrinevald.fr/</a></li>
+            <li><!-- raw HTML omitted -->Prof. Frank Kammerzell<!-- raw HTML omitted --> <a
+                    href="https://www.archaeologie.hu-berlin.de/de/personal/kammerzell">https://www.archaeologie.hu-berlin.de/de/personal/kammerzell</a>
+            </li>
+            <li><!-- raw HTML omitted -->Dr. Annick Payne<!-- raw HTML omitted --> <a
+                    href="http://www.iaw.unibe.ch/ueber_uns/va_personen/pd_dr_payne_annick/index_ger.html">http://www.iaw.unibe.ch/ueber_uns/va_personen/pd_dr_payne_annick/index_ger.html</a>
+            </li>
+        </ul>
+        <!-- raw HTML omitted -->
+
+
+
+
+
+    </div>
+
+    <div id="footer">
+        © Goldwasser/Harel/Nikolaev 2018-2025
+        <img src="images/HUJI.png" alt="HUJI logo">
+        <img src="images/ISF.png" alt="ISF logo">
+    </div>
+</body>
+
+</html>
