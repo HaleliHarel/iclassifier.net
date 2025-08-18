@@ -55,6 +55,32 @@ div#footer img {
     margin-left: 10px;
 }
 
+.hero {
+  max-width: 900px; /* container max size */
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.demo-video {
+  width: 100%;       /* fill container width */
+  height: auto;      /* keep aspect ratio */
+  display: block;
+  border-radius: 8px;
+}
+
+.demo-caption .lead {
+  color: #0b3d91;
+  font-size: 1rem;
+  margin: 0.25rem 0 0;
+}
+
+.demo-caption .meta {
+  font-size: 0.85rem;
+  margin: 0.2rem 0 0;
+  color: #333;
+}
+
 div#menu {
     grid-row: auto;
     grid-column: 1/4;
@@ -107,7 +133,13 @@ div#menuLinks {
     font-size: 16pt;
 }
 
-h2, h3 {
+h2 {
+    font-size: 1.2em;
+    color: rgb(21, 27, 144);
+    text-align: center;
+}
+
+h3 {
     text-align: center;
 }
 
@@ -227,7 +259,7 @@ select.fixwidth {
     width: 100vw;
     display: flex;
     justify-content: center;
-    align-items: bottom;
+    align-items: flex-end;
     padding: 16px 32px;
     background-color: lightseagreen;
     z-index: 100;
@@ -235,11 +267,10 @@ select.fixwidth {
 
 .footer-text {
     font-size: 14px;
-    align: bottom;
 }
 
 .footer-logos {
-    display: fixed;
+    display: flex;
     align-items: center;
 }
 
@@ -247,7 +278,6 @@ select.fixwidth {
     height: 80px;
     vertical-align: bottom;
 }
-
 
 .website-preview {
     text-decoration: none;
@@ -345,26 +375,98 @@ h3 {
   }
 }
 
-.classifier-goals {
-  list-style: none; /* removes default bullets */
-  padding-left: 0;
+.classifier-goals { list-style: none; margin: 0; padding: 0; }
+.classifier-goals li { margin: .6em 0; }
+
+.goal {
+  display: grid;
+  grid-template-columns: 2.6em 1fr;   /* node | text */
+  align-items: center;
+  column-gap: .7em;
+  text-decoration: none;
+  color: inherit;
+  padding: .3em .4em;
+  border-radius: .45em;
+}
+
+.goal:hover { background: rgba(0,0,0,.05); }
+
+.goal-symbol::before {
+  content: attr(data-symbol);
+  display: grid;
+  place-items: center;
+  width: 2.4em; height: 2.4em;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--node-color, #3b82f6);
+  box-shadow: 0 2px 4px rgba(0,0,0,.18);
+  font-size: 1.1em; line-height: 1; white-space: nowrap;
+  font-family: "Noto Sans Egyptian Hieroglyphs","Noto Sans Symbols 2",
+               "Noto Sans CJK SC", system-ui, sans-serif;
+}
+
+/* optional per-symbol colors */
+li [data-symbol="𓏛"]::before       { --node-color:#2563eb; }
+li [data-symbol="𓃱"]::before       { --node-color:#16a34a; }
+li [data-symbol="𓏴"]::before       { --node-color:#f59e0b; }
+li [data-symbol="𓁐"]::before       { --node-color:#a855f7; }
+li [data-symbol="𓀀 𒇻 人"]::before { --node-color:#ef4444; }
+li [data-symbol="𓁻"]::before       { --node-color:#0ea5e9; }
+
+.back-link { margin-top: 1rem; }
+
+.goal-symbol.multi::before { content: none; }
+
+/* layout for multiple nodes */
+.goal-symbol.multi {
+  display: flex;
+  gap: 0.3em;
+}
+
+/* style for each node */
+.goal-symbol.multi .node {
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1.1em;
-  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0,0,0,.18);
 }
 
-.classifier-goals li {
-  margin-bottom: 1em;
-  text-indent: -1.8em;       /* aligns the glyph nicely */
-  padding-left: 2em;         /* space before the text */
+.goal {
+  display: grid;
+  grid-template-columns: auto 1fr;   /* left side grows with nodes */
+  align-items: center;
+  column-gap: .7em;
+  text-decoration: none;
+  color: inherit;
+  padding: .3em .4em;
+  border-radius: .45em;
 }
 
+.goal-symbol.multi::before { content: none; }  /* turn off the default circle */
 
-.iframe-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* height: 100vh;  Remove or comment out this line */
-    width: 90%;
-    margin: 16px 0; /* Reduced vertical margin */
-} 
+.goal-symbol.multi {
+  display: flex;
+  gap: 0.3em;   /* spacing between nodes */
+}
+
+.goal-symbol.multi .node {
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+  box-shadow: 0 2px 4px rgba(0,0,0,.18);
+}
+
+.goal-text {
+  display: block;
+}
 

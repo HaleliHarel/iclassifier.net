@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <meta name="robots" content="noindex">
+<meta charset="utf-8">
 
 <head>
     
@@ -33,21 +34,44 @@
         </div>
     </div>
 
-    <div id="main">
-        <h3>Turning texts into networks of concepts and categories</h3>
-       <video src="/images/iclassifier.mp4" width="800" height="600" autoplay loop muted playsinline style="margin-bottom: 1px;">
-        Your browser does not support the video tag.</video>
+<div id="main" class="hero">
+  <h2 id="dynamic-heading">Turning texts into networks of concepts and categories</h2>
 
-        <center>
-            
-            <p style="color: darkblue; font-size: 1.25em; margin-top: 0;">
-                A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
-            </p>
-            <p style="font-size: 0.8em; margin-top: 0;">
-                Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
-            </p>
-        </center>
-    </div>
+<script>
+    setTimeout(function() {
+      document.getElementById('dynamic-heading').innerHTML =
+        'Turning texts into networks of <span style="color:green;">concepts</span> and <span style="color:purple;">categories</span>';
+    }, 10000);
+  </script>
+
+  <figure class="demo">
+    <video
+      class="demo-video"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="metadata"
+      poster="/images/demoiclassifier.jpg"
+    >
+      <!-- Smaller, faster first -->
+      <source src="/images/demoiclassifier.webm" type="video/webm">
+      <source src="/images/demoiclassifier.mp4"  type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <figcaption class="demo-caption">
+      <p class="lead">
+        A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
+      </p>
+      <p class="meta">
+        Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in
+        <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
+      </p>
+    </figcaption>
+  </figure>
+</div>
+
 <div id="footer">
     <span class="footer-text"><i>©iClassifier</i>, Goldwasser/Harel/Nikolaev 2019-2025</span>
     <div class="footer-logos">
