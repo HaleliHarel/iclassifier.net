@@ -162,11 +162,23 @@ Payne and Olga Olina; see Olina 2024 for the conversion scheme</p>
 </div>
 
 
-  <div id="footer">
-    <span class="footer-text"><i>©iClassifier</i>, Goldwasser/Harel/Nikolaev 2019-2025</span>
-    <div class="footer-logos">
-        <img src="/images/logo_ltr.png" alt="HUJI logo">
-        <img src="/images/Israel_Science_Foundation.svg" alt="ISF logo">
-    </div>
+<div id="footer">
+  <span class="footer-text"><i>©iClassifier</i>, Goldwasser/Harel/Nikolaev 2019-2025</span>
+  <div class="footer-logos" style="display:none;">
+    <img src="/images/logo_ltr.png" alt="HUJI logo">
+    <img src="/images/Israel_Science_Foundation.svg" alt="ISF logo">
+  </div>
+  <script>
+    window.addEventListener('scroll', function() {
+    var footerLogos = document.querySelector('.footer-logos');
+    // Check if scrolled to bottom
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      footerLogos.style.display = 'block';
+    } else {
+      footerLogos.style.display = 'none';
+    }
+    });
+  </script>
+</div>
 
 </div>
