@@ -5,7 +5,7 @@
 
 html {
     /* background-color: gainsboro; */
-    background-color: lightseagreen;
+    background-color: rgb(145, 198, 195);
     padding: 0;
 }
 
@@ -16,7 +16,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-top: 0;
-    background-color: lightseagreen;
+    background-color: rgb(145, 198, 195);
     min-height: 97vh;
     padding-bottom: 25px;
     display: grid;
@@ -47,7 +47,7 @@ div#main {
 div#footer {
     grid-row: 3/4;
     padding: 15px;
-    background-color: lightseagreen;
+    background-color: rgb(145, 198, 195);
 }
 
 div#footer img {
@@ -330,7 +330,7 @@ select.fixwidth {
 }
 
 h3 {
-    color: lightseagreen;
+    color: rgb(65, 69, 69);
 }
 
 .team-member {
