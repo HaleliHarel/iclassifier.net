@@ -151,7 +151,6 @@ let map = {
 				m('input[type=button]', {
 					style: { 'margin-left': '5px' },
 					value: 'Download network data as CSV',
-					disabled: !mapDrawn,
 					onclick: e => { e.redraw = false; downloadNetworkAsCSV(); }
 				})
 			]);
