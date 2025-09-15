@@ -1,4 +1,7 @@
 let network, useUnicode = true;
+let mapDrawn = false;
+let currentLemEdgeDict = {};
+let currentClfEdgeDict = {};
 
 let clfLevels = new Set([1, 2, 3, 4, 5]),
 	clfTypes = new Set(['taxonomic', 'taxonomic_repeater', 'taxonomic_metaphoric', 'schematic', 'unclear']);
@@ -144,6 +147,12 @@ let map = {
 					style: { 'margin-left': '5px' },
 					value: 'Freeze the network',
 					onclick: () => { network.setOptions({ physics: false }); }
+				}),
+				m('input[type=button]', {
+					style: { 'margin-left': '5px' },
+					value: 'Download network data as CSV',
+					disabled: !mapDrawn,
+					onclick: e => { e.redraw = false; downloadNetworkAsCSV(); }
 				})
 			]);
 	}
@@ -407,6 +416,53 @@ function compareClfMDC(a, b) {
 }
 
 /**
+ * Downloads the network data as a CSV file with 5 columns:
+ * 1. lemma_id (for lemEdgeDict entries)
+ * 2. clf_id (for lemEdgeDict entries)
+ * 3. clf_id_1 (for clfEdgeDict entries)
+ * 4. clf_id_2 (for clfEdgeDict entries)
+ * 5. value (frequency count)
+ */
+function downloadNetworkAsCSV() {
+	if (!mapDrawn) return;
+
+	// Create CSV header
+	let csvContent = "lemma_id,clf_id,clf_id_1,clf_id_2,value\n";
+
+	// Process lemma edges (clf_id>lemma_id)
+	for (const key in currentLemEdgeDict) {
+		if (!currentLemEdgeDict.hasOwnProperty(key)) continue;
+
+		const [clfId, lemmaId] = key.split('>');
+		// Format: lemma_id, clf_id, empty, empty, value
+		csvContent += `${lemmaId},${clfId},,,${currentLemEdgeDict[key]}\n`;
+	}
+
+	// Process classifier edges (clf_id_1>clf_id_2)
+	for (const key in currentClfEdgeDict) {
+		if (!currentClfEdgeDict.hasOwnProperty(key)) continue;
+
+		const [clfId1, clfId2] = key.split('>');
+		// Format: empty, empty, clf_id_1, clf_id_2, value
+		csvContent += `,,${clfId1},${clfId2},${currentClfEdgeDict[key]}\n`;
+	}
+
+	// Create and trigger download
+	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+
+	link.setAttribute('href', url);
+	link.setAttribute('download', 'network_data.csv');
+	link.style.visibility = 'hidden';
+
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+}
+
+
+/**
  * A work-horse function for drawMapAll and drawMapByTypes
  */
 async function drawMapFromDicts(
@@ -415,6 +471,11 @@ async function drawMapFromDicts(
 	lemEdgeDict,
 	clfEdgeDict
 ) {
+	// Store current dictionaries for download
+	currentLemEdgeDict = { ...lemEdgeDict };
+	currentClfEdgeDict = { ...clfEdgeDict };
+	mapDrawn = true;
+
 	let nodes = new vis.DataSet(),
 		edges = new vis.DataSet(),
 		graphData = {
