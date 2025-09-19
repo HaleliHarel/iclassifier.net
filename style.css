@@ -5,22 +5,51 @@
 
 html {
     /* background-color: gainsboro; */
-    background-color: rgb(145, 198, 195);
+    background-color: rgb(237, 237, 237);
     padding: 0;
 }
+
 
 body {
     font-family: 'PT Serif', serif;
     font-size: 12pt;
-    max-width: 880px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0;
-    background-color: rgb(145, 198, 195);
+    margin: 0;
+    padding: 0;
+    background-color: rgb(237, 237, 237);
     min-height: 97vh;
-    padding-bottom: 25px;
     display: grid;
     grid-template-rows: 160px 1fr 50px;
+    /* remove max-width and centered margin */
+}
+
+/* Main content should scale */
+div#main {
+    grid-row: 2/3;
+    padding: 2vw; /* use responsive padding */
+    margin-top: 20px;
+    background-color: rgb(238, 241, 246);
+    border-radius: 10px;
+    max-width: 1200px;  /* optional: prevent extremely wide text */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+/* Hero section responsive */
+.hero {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Video responsive */
+.demo-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 p:first-child {
@@ -40,14 +69,14 @@ div#main {
     padding-right: 40px;
     padding-bottom: 30px;
     margin-top: 20px;
-    background-color: oldlace;
+    background-color: rgb(206, 217, 217);
     border-radius: 10px;
 }
 
 div#footer {
     grid-row: 3/4;
     padding: 15px;
-    background-color: rgb(145, 198, 195);
+    background-color: rgb(237, 237, 237);
 }
 
 div#footer img {
@@ -261,7 +290,7 @@ select.fixwidth {
     justify-content: center;
     align-items: flex-end;
     padding: 16px 32px;
-    background-color: lightseagreen;
+    background-color: (237, 237, 237);
     z-index: 100;
 }
 
@@ -406,9 +435,9 @@ h3 {
 }
 
 /* optional per-symbol colors */
-li [data-symbol="𓏛"]::before       { --node-color:#2563eb; }
+li [data-symbol="𓏛"]::before       { --node-color:#ff9500; }
 li [data-symbol="𓃱"]::before       { --node-color:#16a34a; }
-li [data-symbol="𓏴"]::before       { --node-color:#f59e0b; }
+li [data-symbol="𓁻"]::before       { --node-color:#f59e0b; }
 li [data-symbol="𓁐"]::before       { --node-color:#a855f7; }
 li [data-symbol="𓀀 𒇻 人"]::before { --node-color:#ef4444; }
 li [data-symbol="𓁻"]::before       { --node-color:#0ea5e9; }
@@ -470,3 +499,44 @@ li [data-symbol="𓁻"]::before       { --node-color:#0ea5e9; }
   display: block;
 }
 
+
+/* Make goal content visually distinct */
+.goal-content {
+  background: #f7f7f7;        /* light gray background */
+  border: 1px solid #ddd;     /* subtle border */
+  border-radius: 0.6em;       /* rounded corners */
+  padding: 1em 1.2em;
+  margin-top: 0.5em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* soft shadow for depth */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Smooth reveal effect */
+.goal-content.open {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optionally give the goal button same tone */
+.goal {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 0.5em;
+  padding: 0.6em 0.8em;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.goal:hover {
+  background: #ececec;
+}
