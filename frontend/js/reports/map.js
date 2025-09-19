@@ -426,15 +426,19 @@ function downloadNetworkAsCSV() {
 	if (!mapDrawn) return;
 
 	// Create CSV header
-	let csvContent = "lemma_id,clf_id,clf_id_1,clf_id_2,value\n";
+	let csvContent = "lemma_id,lemma_meaning,clf_id,clf_id_1,clf_id_2,value\n";
 
 	// Process lemma edges (clf_id>lemma_id)
 	for (const key in currentLemEdgeDict) {
 		if (!currentLemEdgeDict.hasOwnProperty(key)) continue;
 
 		const [clfId, lemmaId] = key.split('>');
-		// Format: lemma_id, clf_id, empty, empty, value
-		csvContent += `${lemmaId},${clfId},,,${currentLemEdgeDict[key]}\n`;
+		let lemmaMeaning = ''
+		if (lemmaData.hasOwnProperty(lemmaId)) {
+			lemmaMeaning = lemmaData[lemmaId].meaning.replace(',', ';');
+		}
+		// Format: lemma_id, lemma_meaning, clf_id, empty, empty, value
+		csvContent += `${lemmaId},${lemmaMeaning},${clfId},,,${currentLemEdgeDict[key]}\n`;
 	}
 
 	// Process classifier edges (clf_id_1>clf_id_2)
@@ -442,8 +446,8 @@ function downloadNetworkAsCSV() {
 		if (!currentClfEdgeDict.hasOwnProperty(key)) continue;
 
 		const [clfId1, clfId2] = key.split('>');
-		// Format: empty, empty, clf_id_1, clf_id_2, value
-		csvContent += `,,${clfId1},${clfId2},${currentClfEdgeDict[key]}\n`;
+		// Format: empty, empty, empty, clf_id_1, clf_id_2, value
+		csvContent += `,,,${clfId1},${clfId2},${currentClfEdgeDict[key]}\n`;
 	}
 
 	// Create and trigger download
