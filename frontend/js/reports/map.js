@@ -435,7 +435,7 @@ function downloadNetworkAsCSV() {
 		const [clfId, lemmaId] = key.split('>');
 		let lemmaMeaning = ''
 		if (lemmaData.hasOwnProperty(lemmaId)) {
-			lemmaMeaning = lemmaData[lemmaId].meaning.replace(',', ';');
+			lemmaMeaning = lemmaData[lemmaId].meaning.replaceAll(',', ';');
 		}
 		// Format: lemma_id, lemma_meaning, clf_id, empty, empty, value
 		csvContent += `${lemmaId},${lemmaMeaning},${clfId},,,${currentLemEdgeDict[key]}\n`;
