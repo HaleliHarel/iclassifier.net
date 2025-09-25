@@ -53,12 +53,11 @@
     </p>
     <p>
       The platform offers both an accessible web interface for interactive exploration and a 
-     backend for advanced linguistic and philological analysis and export. Users can generate classifier lists, 
+     backend for advanced linguistic and philological analysis. Users can generate classifier lists, 
       track diachronic change, and visualize co-occurrence patterns as networks. Designed for 
       collaboration, <i><strong>iClassifier</strong></i> integrates with major linguistic corpora and databases, 
       making it a versatile tool for Egyptologists, Assyriologists, Sinologists, Linguists and other scholars 
-      who seek to investigate language structure in context.
-    </p>
+      who seek to investigate language structure in context. <strong>Our research explores what categories humans share across cultures and what categories are unique, applying a typological approach.</strong>
   </div>
 
   <h2 id="dynamic-heading">Turning the lexicon into networks of concepts and categories</h2>
@@ -70,40 +69,47 @@
     }, 10000);
   </script>
 
-  <figure class="demo">
+<figure class="demo">
+  <div class="demo-wrap">
+    <!-- Visible first -->
+    <img class="poster-img" src="images/startnetwork.png" alt="iClassifier preview" />
+
+    <!-- Fades in on play -->
     <video
+      id="demo-video"
       class="demo-video"
       autoplay
-      loop
       muted
       playsinline
       preload="metadata"
-      poster="/images/startnetwork.png"
+      poster="images/startnetwork.png"
     >
-      <source src="/images/demoiclassifier.webm" type="video/webm">
-      <source src="/images/demoiclassifier.mp4"  type="video/mp4">
+      <source src="images/demoiclassifier.webm" type="video/webm">
+      <source src="images/demoiclassifier.mp4"  type="video/mp4">
       Your browser does not support the video tag.
     </video>
+  </div>
 
-    <figcaption class="demo-caption">
-      <p class="lead">
-        A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
-      </p>
-      <p class="meta">
-        Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in
-        <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
-      </p>
-    </figcaption>
-  </figure>
+  <figcaption class="demo-caption">
+    <p class="lead">
+      A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
+    </p>
+    <p class="meta">
+      Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in
+      <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
+    </p>
+  </figcaption>
+</figure>
+
 
 </div>
 
 <div id="footer">
   <span class="footer-text"><i>©iClassifier</i>, Goldwasser/Harel/Nikolaev 2019-2025</span>
   <div class="footer-logos" style="display:none;">
-    <img src="/images/logo_ltr.png" alt="HUJI logo">
-    <img src="/images/Israel_Science_Foundation.svg" alt="ISF logo">
-     <a href="https://www.archaeomind.net/" target="_blank"><img src="/images/lablogo_archaeomind.png" alt="Archaemind logo"></a>
+<img src="/images/logo_ltr.png" alt="HUJI logo">
+<img src="/images/Israel_Science_Foundation.svg" alt="ISF logo">
+<a href="https://www.archaeomind.net/" target="_blank"><img src="/images/lablogo_archaeomind.png" alt="Archaemind logo"></a>
   </div>
   <script>
     window.addEventListener('scroll', function() {
@@ -147,6 +153,34 @@
     }, { passive: true });
 
     footer.classList.remove('show'); // start hidden
+  })();
+</script>
+
+<script>
+  (function () {
+    const video  = document.getElementById('demo-video');
+    const poster = document.querySelector('.poster-img');
+
+    function revealVideo() {
+      // Small delay so users perceive the poster before motion
+      setTimeout(() => {
+        video.classList.add('is-playing');
+        poster.classList.add('is-hidden');
+      }, 300);
+    }
+
+    // When the video actually starts (autoplay), fade in
+    video.addEventListener('playing', revealVideo);
+
+    // Fallback: if autoplay is delayed but metadata loads, try to start
+    video.addEventListener('loadeddata', () => {
+      if (video.paused) {
+        // Some browsers require a user gesture; keep poster until play happens
+        // You can also allow clicking the poster to start:
+        poster.style.cursor = 'pointer';
+        poster.addEventListener('click', () => video.play().catch(()=>{}), { once: true });
+      }
+    });
   })();
 </script>
 
