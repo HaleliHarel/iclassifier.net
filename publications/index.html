@@ -168,22 +168,33 @@
   </div>
 
 <h3 id="research-projects">Research funding</h3>
-        
-        <h4>Exploring the minds of Ancient Egypt and Ancient China — A comparative network analysis of the classifier systems of the scripts </h4>
-        <p>ISF grant no. 1704/22,  PI Prof. Orly Goldwasser, co-investigator, Prof. Zev Handel. Participants: Yanru Xu, Haleli Harel, Dmitry Nikolaev, Jorke Grotenhuis </p> 
-        <h4>Classifying the other: The classification of Semitic loanwords in the Egyptian script</h4>
-        <p>ISF grant no. 735/17, PI Prof. Orly Goldwasser,  Participants: Haleli Harel, Dmitry Nikolaev</p>
-        <p>For an up-to-date list of research projects on the topic of Classifier Studies in Ancient Egyptian, 
-            at the Hebrew University of Jerusalem, led by Prof. Orly Goldwasser:</p>
-           <a class="website-preview" href="https://sites.google.com/view/orlygoldwasser/projects" target="_blank">
-    <div class="preview-container">
-        <img class="preview-favicon" src="https://www.google.com/s2/favicons?domain=sites.google.com" alt="Site favicon">
-        <div class="preview-details">
-            <div class="preview-title">Orly Goldwasser Projects</div>
-            <div class="preview-desc">Research projects on Classifier Studies in Ancient Egyptian at HUJI.</div>
-            <div class="preview-url">sites.google.com/view/orlygoldwasser/projects</div>
-        </div>
-    </div>
+
+<p>
+  For an up-to-date list of research projects on the topic of Classifier Studies in Ancient Egyptian, 
+  at the Hebrew University of Jerusalem, led by Prof. Orly Goldwasser:
+</p>
+
+
+<div class="preview-container">
+  <img class="preview-thumb" src="/images/projects.png" alt="iClassifier preview" />
+  <div class="preview-details">
+    <a class="website-preview" href="https://sites.google.com/view/orlygoldwasser/projects" target="_blank">
+      <div class="preview-title">Orly Goldwasser Projects</div>
+      <div class="preview-desc">Research projects on Classifier Studies in Ancient Egyptian at HUJI.</div>
+      <div class="preview-url">sites.google.com/view/orlygoldwasser/projects</div>
+    </a>
+  </div>
+</div>
+
+
+<h4>Exploring the minds of Ancient Egypt and Ancient China — A comparative network analysis of the classifier systems of the scripts</h4>
+<p>ISF grant no. 1704/22, PI Prof. Orly Goldwasser, co-investigator, Prof. Zev Handel. Participants: Yanru Xu, Haleli Harel, Dmitry Nikolaev, Jorke Grotenhuis.</p>
+
+<h4>Classifying the other: The classification of Semitic loanwords in the Egyptian script</h4>
+<p>ISF grant no. 735/17, PI Prof. Orly Goldwasser. Participants: Haleli Harel, Dmitry Nikolaev.</p>
+
+
+
 </a>
     </div>
 </div>
@@ -207,6 +218,39 @@
   </script>
 </div>
 
-</body>
 
+<script>
+  (function () {
+    const footer = document.getElementById('footer');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const nearBottom = (window.innerHeight + y) >= (document.body.offsetHeight - 24);
+
+      if (goingDown || nearBottom) {
+        footer.classList.add('show');
+      } else {
+        footer.classList.remove('show');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    footer.classList.remove('show'); // start hidden
+  })();
+</script>
+
+
+</body>
 </html>

@@ -42,7 +42,9 @@
     </div>
   </div>
 
-  <div id="main">
+    <div id="main"> 
+
+  <div class="intro">
     <div style="text-align:center; color:darkblue;">
       <p style="font-size:1.25em; margin:.2em 0;">
         The <i>iClassifier</i> research tool is designed to provide a data-driven,<br>
@@ -53,7 +55,7 @@
         (e.g., Ancient Egyptian, Sumerian, Ancient Chinese, and Anatolian hieroglyphs), gradually building the
         semantic range of individual classifiers, and sketching the classification patterns across each corpus.
       </p>
-    
+    </div>
     
   
 
@@ -218,5 +220,39 @@
       footerLogos.style.display = atBottom ? "block" : "none";
     });
   </script>
+
+
+<script>
+  (function () {
+    const footer = document.getElementById('footer');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const nearBottom = (window.innerHeight + y) >= (document.body.offsetHeight - 24);
+
+      if (goingDown || nearBottom) {
+        footer.classList.add('show');
+      } else {
+        footer.classList.remove('show');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    footer.classList.remove('show'); // start hidden
+  })();
+</script>
+
 </body>
 </html>

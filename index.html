@@ -44,6 +44,23 @@
     </div>
 
 <div id="main" class="hero">
+
+ <div class="intro">
+    <p> <i><strong>iClassifier</strong></i> (©Goldwasser,Harel,Nikolaev) is an open-source and collaborative research platform for analyzing and visualizing 
+      classifier systems in ancient scripts. It provides a toolset to annotate, compare, and explore classifiers (aka determinatives) within an extensive text corpus, enabling researchers to move beyond static word lists 
+      toward dynamic, network-based representations of ancient lexicons. By aligning philological precision with computational methods, users access the system in its contexts of use,
+      and browse through categories and concepts across time and genres.
+    </p>
+    <p>
+      The platform offers both an accessible web interface for interactive exploration and a 
+     backend for advanced linguistic and philological analysis and export. Users can generate classifier lists, 
+      track diachronic change, and visualize co-occurrence patterns as networks. Designed for 
+      collaboration, <i><strong>iClassifier</strong></i> integrates with major linguistic corpora and databases, 
+      making it a versatile tool for Egyptologists, Assyriologists, Sinologists, Linguists and other scholars 
+      who seek to investigate language structure in context.
+    </p>
+  </div>
+
   <h2 id="dynamic-heading">Turning the lexicon into networks of concepts and categories</h2>
 
 <script>
@@ -61,9 +78,8 @@
       muted
       playsinline
       preload="metadata"
-      poster="/images/demoiclassifier.jpg"
+      poster="/images/startnetwork.png"
     >
-      <!-- Smaller, faster first -->
       <source src="/images/demoiclassifier.webm" type="video/webm">
       <source src="/images/demoiclassifier.mp4"  type="video/mp4">
       Your browser does not support the video tag.
@@ -79,6 +95,7 @@
       </p>
     </figcaption>
   </figure>
+
 </div>
 
 <div id="footer">
@@ -99,6 +116,38 @@
     });
   </script>
 </div>
+
+<script>
+  (function () {
+    const footer = document.getElementById('footer');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const nearBottom = (window.innerHeight + y) >= (document.body.offsetHeight - 24);
+
+      if (goingDown || nearBottom) {
+        footer.classList.add('show');
+      } else {
+        footer.classList.remove('show');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    footer.classList.remove('show'); // start hidden
+  })();
+</script>
 
 </body>
 

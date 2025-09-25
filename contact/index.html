@@ -95,6 +95,39 @@ Join us in building a comprehensive picture of ancient lexicons and their intern
 
 
 </div>
+
+
+<script>
+  (function () {
+    const footer = document.getElementById('footer');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const nearBottom = (window.innerHeight + y) >= (document.body.offsetHeight - 24);
+
+      if (goingDown || nearBottom) {
+        footer.classList.add('show');
+      } else {
+        footer.classList.remove('show');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    footer.classList.remove('show'); // start hidden
+  })();
+</script>
 </body>
 
 </html>
