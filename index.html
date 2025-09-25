@@ -69,26 +69,22 @@
     }, 10000);
   </script>
 
-<figure class="demo">
-  <div class="demo-wrap">
-    <!-- Visible first -->
-    <img class="poster-img" src="images/startnetwork.png" alt="iClassifier preview" />
 
-    <!-- Fades in on play -->
-    <video
-      id="demo-video"
-      class="demo-video"
-      autoplay
-      muted
-      playsinline
-      preload="metadata"
-      poster="images/startnetwork.png"
-    >
-      <source src="images/demoiclassifier.webm" type="video/webm">
-      <source src="images/demoiclassifier.mp4"  type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
+<figure class="demo">
+  <video
+    id="demo-video"
+    class="demo-video"
+    muted
+    playsinline
+    loop
+    preload="metadata"
+    poster="images/startnetwork.png"
+  >
+    <source src="images/demoiclassifier.webm" type="video/webm">
+    <source src="images/demoiclassifier.mp4"  type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
 
   <figcaption class="demo-caption">
     <p class="lead">
@@ -157,31 +153,11 @@
 </script>
 
 <script>
-  (function () {
-    const video  = document.getElementById('demo-video');
-    const poster = document.querySelector('.poster-img');
-
-    function revealVideo() {
-      // Small delay so users perceive the poster before motion
-      setTimeout(() => {
-        video.classList.add('is-playing');
-        poster.classList.add('is-hidden');
-      }, 300);
-    }
-
-    // When the video actually starts (autoplay), fade in
-    video.addEventListener('playing', revealVideo);
-
-    // Fallback: if autoplay is delayed but metadata loads, try to start
-    video.addEventListener('loadeddata', () => {
-      if (video.paused) {
-        // Some browsers require a user gesture; keep poster until play happens
-        // You can also allow clicking the poster to start:
-        poster.style.cursor = 'pointer';
-        poster.addEventListener('click', () => video.play().catch(()=>{}), { once: true });
-      }
-    });
-  })();
+  window.addEventListener('load', function () {
+    const v = document.getElementById('demo-video');
+    // short delay so users perceive the poster, then play
+    setTimeout(() => v.play().catch(()=>{}), 600);
+  });
 </script>
 
 </body>
