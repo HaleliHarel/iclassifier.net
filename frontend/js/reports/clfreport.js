@@ -388,11 +388,52 @@ function getClfReport(mdc) {
 
 		tokensForClf.push(key);
 
-		let glyphs = clfs.map(x => x);
-		if (projectType === 'hieroglyphic')
-			glyphs = clfs.map(mdc => mdc2glyph(mdc));
+		// Define mapping function based on project type
+		const mapFunction = projectType === 'hieroglyphic' ? mdc2glyph : x => x;
+		let glyphs = clfs.map(mapFunction);
 
-		let combination = glyphs.join('+'),
+		// Filter glyphs to only include those matching level and type criteria
+		let filteredGlyphs = [];
+		for (let i = 0; i < clfs.length; i++) {
+			const clfMdc = clfs[i];
+			const glyphValue = glyphs[i];
+
+			// Get parsed data for this classifier to check level and type
+			let clfParseForCombination = {
+				clf_level: null,
+				clf_type: null
+			};
+			for (const clfParseKey in clfData)
+				if (
+					clfData.hasOwnProperty(clfParseKey) &&
+					clfData[clfParseKey].token_id == key &&
+					clfData[clfParseKey].gardiner_number === clfMdc
+				) {
+					clfParseForCombination = JSON.parse(JSON.stringify(clfData[clfParseKey]));
+					break;
+				}
+
+			// Check if this classifier matches the level filter
+			if (
+				clfReport.clfLevel != 'any' &&
+				clfReport.clfLevel != clfParseForCombination.clf_level
+			)
+				continue;
+
+			// Check if this classifier matches the type filter
+			let combinationTypes = new Set();
+			for (const clfType of String(clfParseForCombination.clf_type).split(';'))
+				combinationTypes.add(clfType);
+			if (
+				clfReport.clfType != 'any' &&
+				!combinationTypes.has(clfReport.clfType)
+			)
+				continue;
+
+			filteredGlyphs.push(glyphValue);
+		}
+
+		let combination = filteredGlyphs.join('+'),
 			lemmaID = tokenInfo.lemma_id;
 
 		// Order stats for this classifier
@@ -449,8 +490,8 @@ function getClfReport(mdc) {
 			}
 		}
 
-		// CLF co-occurrence stats
-		for (const value of glyphs) {
+		// CLF co-occurrence stats (reuse filtered glyphs from combination logic)
+		for (const value of filteredGlyphs) {
 			if (value === glyph)
 				continue;
 			if (!clfDict.hasOwnProperty(value))
