@@ -1,8 +1,5 @@
-// const authURL = 'https://www.iclassifier.pw/api/authserver',
-// const authURL = 'http://127.0.0.1:21000',
-// const requestURL = 'https://iclassifier.click/api/readonly',
-// 	jseshURL = 'https://iclassifier.click/jsesh/?mdc=';
-const requestURL = "https://iclassifier.pw/api/readonly",
+// URLs are now derived from siteURL set in the template
+const requestURL = siteURL + "/api/readonly",
   jseshURL = "https://iclassifier.pw/jsesh/?mdc=";
 
 let path = null,

@@ -464,6 +464,7 @@ async function drawLemmaClfGraph(lemma) {
 				clfKeyMDC = clfKey;
 			}
 			try {
+				// Not running Jsesh locally
 				const response = await fetch(
 					'https://iclassifier.pw/jsesh/?height=50&centered=true&mdc=' + clfKeyMDC
 				);
