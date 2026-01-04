@@ -1,12 +1,15 @@
-/* =============== Fonts =============== */
+/* =========================
+   Fonts
+   ========================= */
 @font-face {
   font-family: 'hierofont';
   src: url("EgyptianHiero.woff") format("woff");
 }
-
 @import url('https://fonts.googleapis.com/css2?family=Alef&display=swap');
 
-/* =============== Root / Page =============== */
+/* =========================
+   Root / Base
+   ========================= */
 :root { --footer-height: 64px; }
 
 html {
@@ -18,58 +21,12 @@ body {
   font-family: 'PT Serif', serif;
   font-size: 12pt;
   margin: 0;
-  padding: 0;
-  background-color: rgb(237, 237, 237);
+  background-color: #fdfdfd;
   /* Reserve space so fixed footer never covers content */
   padding-bottom: var(--footer-height);
 }
 
 p:first-child { margin-top: 0; }
-
-/* =============== Header/Layout =============== */
-div#header {
-  display: grid;
-  grid-template-columns: 235px 1fr;
-  grid-template-rows: 80px 1fr 1fr;
-}
-
-div#logo {
-  grid-row: 1/2;
-  grid-column: 1/4;
-  padding-top: 25px;
-}
-
-div#logo img {
-  display: block;
-  margin: auto;
-}
-
-div#title {
-  display: block;
-  margin: auto;
-  grid-row: 2/3;
-  grid-column: 1/4;
-  padding-bottom: 15px;
-}
-
-div#title span {
-  font-family: 'Crimson Text', serif;
-  font-size: 16pt;
-  margin: auto;
-  display: block;
-}
-
-div#menu {
-  grid-row: auto;
-  grid-column: 1/4;
-  display: flex;
-  align-items: center;
-}
-
-div#menuLinks {
-  display: block;
-  margin: auto;
-}
 
 .small { font-size: 12pt; }
 .hiero { font-family: 'hierofont', serif; font-size: 16pt; }
@@ -79,22 +36,63 @@ h2 {
   color: rgb(21, 27, 144);
   text-align: center;
 }
-
 h3 { text-align: center; color: rgb(65, 69, 69); }
 
-/* =============== Main Container =============== */
-div#main {
-  padding: 2vw; /* responsive padding */
+/* =========================
+   Header / Layout
+   ========================= */
+#header {
+  display: grid;
+  grid-template-columns: 235px 1fr;
+  grid-template-rows: 80px 1fr 1fr;
+}
+
+#logo {
+  grid-row: 1/2;
+  grid-column: 1/4;
+  padding-top: 25px;
+}
+#logo img {
+  display: block;
+  margin: auto;
+}
+
+#title {
+  display: block;
+  margin: auto;
+  grid-row: 2/3;
+  grid-column: 1/4;
+  padding-bottom: 15px;
+}
+#title span {
+  font-family: 'Crimson Text', serif;
+  font-size: 16pt;
+  margin: auto;
+  display: block;
+}
+
+#menu {
+  grid-row: auto;
+  grid-column: 1/4;
+  display: flex;
+  align-items: center;
+}
+#menuLinks { display: block; margin: auto; }
+
+/* =========================
+   Main Container / Hero
+   ========================= */
+#main {
+  padding: 2vw;              /* responsive padding */
   margin-top: 20px;
   background-color: rgb(238, 241, 246);
   border-radius: 10px;
-  max-width: 1200px;      /* keep text readable on wide screens */
+  max-width: 1200px;         /* keep text readable on wide screens */
   margin-left: auto;
   margin-right: auto;
   width: 100%;
 }
 
-/* Hero / Media */
 .hero {
   max-width: 1200px;
   width: 100%;
@@ -115,14 +113,15 @@ div#main {
   font-size: 1rem;
   margin: 0.25rem 0 0;
 }
-
 .demo-caption .meta {
   font-size: 0.85rem;
   margin: 0.2rem 0 0;
   color: #333;
 }
 
-/* =============== Lists / Links / Previews =============== */
+/* =========================
+   Lists / Links / Previews
+   ========================= */
 ul.options { padding-left: 0; }
 a.pageLink { text-decoration: none; color: black; }
 .preview-span { text-decoration: none !important; }
@@ -135,17 +134,23 @@ li.post-iter {
 }
 li.post-iter:last-child { margin-bottom: 0; }
 
-li.post-iter div.preview-span {
+li.post-iter .preview-span {
   padding: 3px 10px;
   border-radius: 5px;
 }
-li.post-iter div.preview-span:hover {
+li.post-iter .preview-span:hover {
   padding: 2px 9px;
   border: 1px dotted black;
 }
-div.preview-span h3 { margin-top: 0; }
+.preview-span h3 { margin-top: 0; }
 
-/* Code highlight (unchanged except tidy) */
+.preview-container { display:flex; gap:12px; align-items:center; }
+.preview-thumb { width:72px; height:72px; object-fit:cover; border-radius:8px; }
+.preview-favicon { display:none; }
+
+/* =========================
+   Code Highlight (as-is)
+   ========================= */
 .highlight .hll { background-color: beige }
 .highlight {
   background: #ffffff;
@@ -193,33 +198,9 @@ div.preview-span h3 { margin-top: 0; }
 .fixwidth { display:inline-block; width:120px; font-family:'Times New Roman', Times, serif; }
 select.fixwidth { min-width:150px; }
 
-/* =============== Footer (slide-up on scroll) =============== */
-#footer {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: var(--footer-height);
-  background: #f2f2f2;
-  border-top: 1px solid #ccc;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem;
-  box-shadow: 0 -4px 10px rgba(0,0,0,.06);
-  transform: translateY(100%);   /* hidden by default */
-  transition: transform .3s ease;
-  z-index: 1000;
-}
-#footer.show { transform: translateY(0); }
-#footer:hover { transform: translateY(0); }
-
-.footer-text { font-size: .95rem; }
-.footer-logos { display:flex; align-items:center; gap:.5rem; }
-.footer-logos img { height:80px; vertical-align:bottom; }
-
-/* Respect reduced-motion users */
-@media (prefers-reduced-motion: reduce) {
-  #footer { transition: none; }
-}
-
-/* =============== Team section =============== */
+/* =========================
+   Team cards
+   ========================= */
 .team-member {
   display: flex;
   align-items: flex-start;
@@ -236,12 +217,9 @@ select.fixwidth { min-width:150px; }
 .team-member h3 { margin: 0 0 .3em; font-size: 1.2em; }
 .team-member p { margin: 0; line-height: 1.5; }
 
-@media (max-width: 600px) {
-  .team-member { flex-direction: column; align-items: center; text-align: center; }
-  .team-member img { margin-bottom: 1em; }
-}
-
-/* =============== Goals (nodes + accordion content) =============== */
+/* =========================
+   Goals (nodes + accordion)
+   ========================= */
 .classifier-goals { list-style: none; margin: 0; padding: 0; }
 .classifier-goals li { margin: .6em 0; }
 
@@ -273,10 +251,9 @@ select.fixwidth { min-width:150px; }
   font-family: "Noto Sans Egyptian Hieroglyphs","Noto Sans Symbols 2","Noto Sans CJK SC", system-ui, sans-serif;
 }
 
-/* optional per-symbol colors */
+/* per-symbol colors */
 li [data-symbol="𓏛"]::before { --node-color:#ff9500; }
 li [data-symbol="𓃱"]::before { --node-color:#16a34a; }
-li [data-symbol="𓁻"]::before { --node-color:#f59e0b; }
 li [data-symbol="𓁐"]::before { --node-color:#a855f7; }
 li [data-symbol="𓀀 𒇻 人"]::before { --node-color:#ef4444; }
 li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
@@ -306,15 +283,15 @@ li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
   box-shadow: 0 2px 5px rgba(0,0,0,.08);
   transition: all .3s ease-in-out;
 }
-.goal-content.open {
-  animation: fadeIn .25s ease-in-out;
-}
+.goal-content.open { animation: fadeIn .25s ease-in-out; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* =============== Intro (Alef font block) =============== */
+/* =========================
+   Intro (Alef font block)
+   ========================= */
 .intro {
   font-family: 'Alef', sans-serif;
   font-size: 1.15em;
@@ -330,6 +307,27 @@ li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
 .intro strong { color: #2c3e50; }
 .intro p { margin-bottom: 1.2em; }
 
+/* =========================
+   Footer (fixed, slide-up)
+   ========================= */
+#footer {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: var(--footer-height);
+  background: #f2f2f2;
+  border-top: 1px solid #ccc;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 -4px 10px rgba(0,0,0,.06);
+  transform: translateY(100%);           /* hidden by default */
+  transition: transform .3s ease;
+  z-index: 1000;
+}
+#footer.show,
+#footer:hover { transform: translateY(0); }
+
+.footer-text { font-size: .95rem; }
+.footer-logos { display:flex; align-items:center; gap:.5rem; }
 .footer-logos img {
   height: auto;          /* scale naturally */
   max-height: 28px;      /* small size, keeps footer slim */
@@ -338,24 +336,44 @@ li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
   vertical-align: middle;
 }
 
-#footer {
-  background: #f2f2f2;
-  padding: 0.8em 1em;
-  text-align: center;
-  font-size: 0.9em;
-  border-top: 1px solid #ccc;
-  display: flex;
-  justify-content: space-between; /* text left, logos right */
-  align-items: center;            /* center vertically */
+/* Respect reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  #footer { transition: none; }
 }
 
-.preview-container { display:flex; gap:12px; align-items:center; }
-.preview-thumb { width:72px; height:72px; object-fit:cover; border-radius:8px; }
-.preview-favicon { display:none; } /* optional, if you no longer want the tiny icon */
+/* =========================
+   Responsive tweaks
+   ========================= */
+@media (max-width: 900px) {
+  #main { padding: 1.25rem; }
+}
 
-.demo-video {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
+@media (max-width: 768px) {
+  /* Header */
+  #header { padding: .6rem 1rem; }
+  #menu { display: block; text-align: center; }
+  #menuLinks a, #menuLinks .small { display: inline-block; margin: .2rem .3rem; }
+
+  /* Goals: node column slightly smaller */
+  .goal { grid-template-columns: 2.2em 1fr; }
+  .goal-symbol::before { width: 2.2em; height: 2.2em; font-size: 1em; }
+  .goal-symbol.multi .node { width: 2em; height: 2em; font-size: 1em; }
+
+  /* Clamp any inline fixed sizes on images */
+  [style*="max-width:70%"] { max-width: 100% !important; }
+  [style*="height:450px"] { height: auto !important; }
+  [style*="height:400px"] { height: auto !important; }
+
+  /* Side-by-side network images -> stack */
+  .goal-content div[style*="display:flex"] { display: block !important; }
+  .goal-content div[style*="display:flex"] img {
+    width: 100% !important; height: auto !important; margin: 10px 0 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  #title span { font-size: 1rem; }
+  .goal { grid-template-columns: 2em 1fr; column-gap: .6em; }
+  .goal-symbol::before { width: 2em; height: 2em; font-size: .95em; }
+  .goal-symbol.multi .node { width: 1.8em; height: 1.8em; font-size: .95em; }
 }
