@@ -1,8 +1,9 @@
 import json
+import config
 
 
-# ORIGIN = 'iclassifier.click'
-ORIGIN = 'iclassifier.pw'
+# ALLOWED_ORIGIN is now read from environment variable via config module
+ORIGIN = config.ALLOWED_ORIGIN
 # Possible actions
 GET_ACTIONS = [
     'all',

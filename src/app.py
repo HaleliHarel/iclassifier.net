@@ -9,6 +9,7 @@ import forms
 import users
 import authentication
 import utils
+import config
 
 import TableProcessing as TP
 import RequestHandlers as RH
@@ -24,13 +25,15 @@ with open('../data/auth/jwtsecretkey', 'r', encoding='utf-8') as inp:
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# BASE_URL = 'https://iclassifier.click'
-BASE_URL = 'https://iclassifier.pw'
-USER_DB = {
-    str(user_id): users.User(username, user_id)
-    for user_id, username in authentication.cursor.execute(
-        'SELECT id, username FROM participants')
-}
+# BASE_URL is now read from environment variable via config module
+BASE_URL = config.BASE_URL
+USER_DB = {}
+for user_id, username in authentication.cursor.execute(
+        'SELECT id, username FROM participants'):
+    user = users.User(username, user_id)
+    if authentication.is_admin_user(username):
+        user.make_admin()
+    USER_DB[str(user_id)] = user
 USER_DB_INV = {
     v.name: k
     for k, v in USER_DB.items()
@@ -83,9 +86,7 @@ def set_user_authenticated(user_id):
     user.authenticated = True
 
 
-# @app.route('/index')
 @app.route('/input')
-@app.route('/')
 @login_required
 def index():
     # Extract the projects available to the current user
@@ -94,20 +95,71 @@ def index():
                                            authentication.dbconn)
     # TODO: add projects with public reports
     projects_w_reports = projects
-    # print(user_id, projects)
+    
+    # For admin users, fetch additional data
+    all_projects = []
+    users = []
+    permissions = []
+    if current_user.is_admin:
+        cursor = authentication.cursor
+        # Get all projects
+        all_project_rows = cursor.execute('SELECT * FROM `project_info`').fetchall()
+        for project_id, project_tag, project_title, _ in all_project_rows:
+            if project_tag != 'everything':
+                # Get project type
+                project_type = None
+                for pt_tuple in cursor.execute(
+                    'SELECT `project_type` FROM `project_type` WHERE `project_id`=?',
+                    (project_id,)
+                ):
+                    project_type = pt_tuple[0]
+                    break
+                all_projects.append({
+                    'id': project_id,
+                    'tag': project_tag,
+                    'title': project_title,
+                    'type': project_type
+                })
+        
+        # Get all users
+        for user_id_val, username, name, email in cursor.execute(
+            'SELECT id, username, name, email FROM participants'
+        ):
+            users.append({
+                'id': user_id_val,
+                'username': username,
+                'name': name,
+                'email': email
+            })
+        
+        # Get all permissions
+        for user_id_val, project_id, permission_type in cursor.execute(
+            'SELECT `user_id`, `project_id`, type FROM permissions'
+        ):
+            permissions.append({
+                'user_id': user_id_val,
+                'project_id': project_id,
+                'permission': permission_type
+            })
+    
     return flask.render_template('index.html.jinja',
                                  projects=projects,
                                  projects_w_reports=projects_w_reports,
-                                 user_name=current_user.name)
+                                 user_name=current_user.name,
+                                 is_admin=current_user.is_admin,
+                                 all_projects=all_projects,
+                                 users=users,
+                                 permissions=permissions)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/input/login', methods=['GET', 'POST'])
 def login():
     # Here we use a class of some kind to represent and validate our
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     login_page_html = flask.render_template('loginform.html.jinja',
-                                            form=forms.LoginForm())
+                                            form=forms.LoginForm(),
+                                            base_url=BASE_URL)
     try:
         form = forms.LoginForm(flask.request.form)
         print(flask.request.form)
@@ -128,8 +180,10 @@ def login():
             flask.flash('Incorrect password.')
             return flask.redirect(f'{BASE_URL}/input/login')
         set_user_authenticated(str(user_id))
-        # TODO: Check if the user is an admin and set the flag
+        # Check if the user is an admin and set the flag
         user = load_user(str(user_id))
+        if authentication.is_admin_user(username):
+            user.make_admin()
         login_user(user)
         print(f'Logged in successfully: {user_id} is {user.is_authenticated()}')
         flask.flash('Logged in successfully.')
@@ -146,21 +200,21 @@ def login():
     return login_page_html
 
 
-@app.route("/project", methods=['POST'])
+@app.route("/input/project", methods=['POST'])
 @login_required
 def project_redirect():
     project_tag = flask.request.form['project']
     return flask.redirect(f'{BASE_URL}/input/project/{project_tag}')
 
 
-@app.route("/projectreport", methods=['POST'])
+@app.route("/reports/projectreport", methods=['POST'])
 @login_required
 def project_report_redirect():
     project_tag = flask.request.form['project']
     return flask.redirect(f'{BASE_URL}/reports/projectreport/{project_tag}')
 
 
-@app.route("/project/<project_tag>", methods=['GET'])
+@app.route("/input/project/<project_tag>", methods=['GET'])
 @login_required
 def project(project_tag):
     return flask.render_template(
@@ -174,13 +228,14 @@ def project(project_tag):
         user_is_admin='true' if current_user.is_admin else 'false')
 
 
-@app.route("/projectreport/<project_tag>", methods=['GET'])
+@app.route("/reports/projectreport/<project_tag>", methods=['GET'])
 @login_required
 def project_report(project_tag):
     return flask.render_template(
         'reports.html.jinja',
         project_tag=project_tag,
         project_title=authentication.get_project_info(project_tag)['title'],
+        base_url=f'{BASE_URL}',
         js_store_url=f'{BASE_URL}/static/js/reports',
         css_store_url=f'{BASE_URL}/static/css/reports',
         static_store_url=f'{BASE_URL}/static',
@@ -192,7 +247,7 @@ def project_report(project_tag):
 #         user_is_admin='true' if current_user.is_admin else 'false')
 
 
-@app.route("/logout", methods=['POST'])
+@app.route("/input/logout", methods=['POST'])
 @login_required
 def logout():
     logout_user()
@@ -201,7 +256,7 @@ def logout():
 
 
 # API endpoints --- those protected by a JWT token
-@app.route('/<project_tag>/stats', methods=['GET'])
+@app.route('/api/<project_tag>/stats', methods=['GET'])
 @token_required
 def stats(project_tag):
 
@@ -215,7 +270,7 @@ def stats(project_tag):
     return response
 
 
-@app.route('/<project_tag>/info', methods=['GET'])
+@app.route('/api/<project_tag>/info', methods=['GET'])
 @token_required
 def info(project_tag):
 
@@ -228,7 +283,7 @@ def info(project_tag):
     return resp
 
 
-@app.route('/<project_tag>/getxlsx', methods=['GET'])
+@app.route('/api/<project_tag>/getxlsx', methods=['GET'])
 @token_required
 def excel_handler(project_tag):
     user_id = current_user.get_id()
@@ -244,7 +299,7 @@ def excel_handler(project_tag):
     return RH.getxlsx(app, project_tag, cursor)
 
 
-@app.route('/<project_tag>/<table_name>/<action>', methods=['POST', 'GET'])
+@app.route('/api/<project_tag>/<table_name>/<action>', methods=['POST', 'GET'])
 @token_required
 def request_handler(project_tag, table_name, action):
     request = flask.request
@@ -361,7 +416,7 @@ def request_handler(project_tag, table_name, action):
         return RH.setcompoundids(app, access, request, conn, c)
 
 
-@app.route('/admincomments/<project_tag>/<table_name>/<item_id>/<action>', methods=['POST', 'GET'])
+@app.route('/api/admincomments/<project_tag>/<table_name>/<item_id>/<action>', methods=['POST', 'GET'])
 @token_required
 def admincomments_handler(project_tag, table_name, item_id, action):
     username = current_user.name
@@ -446,7 +501,7 @@ def admincomments_handler(project_tag, table_name, item_id, action):
             return resp
 
 
-@app.route('/readonly/<project_name>/<table_name>/<action>', methods=['GET'])
+@app.route('/api/readonly/<project_name>/<table_name>/<action>', methods=['GET'])
 @token_required
 def readonly_handler(project_name, table_name, action):
     """
@@ -478,3 +533,296 @@ def readonly_handler(project_name, table_name, action):
         return resp
     elif action == 'clfreport':
         return RH.readonly_clfreport(app, flask.request, c)
+
+
+# Admin routes
+@app.route('/api/admin/projects/list', methods=['GET'])
+@login_required
+def admin_list_projects():
+    """Get list of all projects for admin."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    cursor = authentication.cursor
+    projects = []
+    project_rows = cursor.execute('SELECT * FROM `project_info`').fetchall()
+    for project_id, project_tag, project_title, _ in project_rows:
+        if project_tag != 'everything':
+            # Get project type
+            project_type = None
+            for pt_tuple in cursor.execute(
+                'SELECT `project_type` FROM `project_type` WHERE `project_id`=?',
+                (project_id,)
+            ):
+                project_type = pt_tuple[0]
+                break
+            projects.append({
+                'id': project_id,
+                'tag': project_tag,
+                'title': project_title,
+                'type': project_type
+            })
+    resp = flask.make_response(flask.jsonify(projects), 200)
+    utils.populate_headers_json(resp)
+    return resp
+
+
+@app.route('/api/admin/users/list', methods=['GET'])
+@login_required
+def admin_list_users():
+    """Get list of all users for admin."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    cursor = authentication.cursor
+    users = []
+    for user_id, username, name, email in cursor.execute(
+        'SELECT id, username, name, email FROM participants'
+    ):
+        users.append({
+            'id': user_id,
+            'username': username,
+            'name': name,
+            'email': email
+        })
+    
+    resp = flask.make_response(flask.jsonify(users), 200)
+    utils.populate_headers_json(resp)
+    return resp
+
+
+@app.route('/api/admin/projects/create', methods=['POST'])
+@login_required
+def admin_create_project():
+    """Create a new project."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    data = flask.request.get_json()
+    project_tag = data.get('tag', '').strip()
+    project_title = data.get('name', '').strip()
+    project_type = data.get('type', '').strip()
+    
+    # Validate input
+    if not project_tag or not project_title or not project_type:
+        resp = flask.make_response('Missing required fields', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    # Check tag format (lowercase letters only)
+    import re
+    if not re.fullmatch(r'[a-z]+', project_tag):
+        resp = flask.make_response('Tag must consist of lowercase letters only', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    cursor = authentication.cursor
+    
+    # Check if tag already exists
+    for existing_tag in cursor.execute(
+        'SELECT `project_id` FROM `project_info`'
+    ):
+        if existing_tag[0] == project_tag:
+            resp = flask.make_response('Project tag already exists', 400)
+            utils.populate_headers_plain(resp)
+            return resp
+    
+    # Create the project
+    cursor.execute(
+        '''
+        INSERT INTO `project_info` 
+            (`project_id`, title, `open_for_browsing`)
+        VALUES (?, ?, ?)''',
+        (project_tag, project_title, 1))
+    project_id = cursor.lastrowid
+    
+    # Add project type
+    cursor.execute(
+        '''
+        INSERT INTO `project_type` (`project_id`, `project_type`)
+        VALUES (?, ?)''',
+        (project_id, project_type))
+    
+    authentication.dbconn.commit()
+    
+    # Update project_types.json
+    import os
+    project_types_path = '../data/project_types.json'
+    if os.path.exists(project_types_path):
+        with open(project_types_path, 'r', encoding='utf8') as inp:
+            project_type_dict = json.load(inp)
+        project_type_dict[project_tag] = project_type
+        with open(project_types_path, 'w', encoding='utf8') as out:
+            json.dump(project_type_dict, out, indent=2)
+    
+    # Create empty project database
+    import os
+
+    init_script_path = os.path.join('../data/projects', 'create_empty_project.sql')
+    try:
+        with open(init_script_path, 'r') as inp:
+            sql_script = inp.read()
+    except (FileNotFoundError, IOError) as e:
+        app.logger.error('Failed to read SQL init script from %s: %s', init_script_path, e)
+        return flask.make_response(flask.jsonify({
+            'error': 'Failed to initialize project database: SQL script file is missing or unreadable.'
+        }), 500)
+    project_dir_path = os.path.join('../data/projects', project_tag)
+    os.makedirs(project_dir_path, exist_ok=True)
+    project_db_path = os.path.join(project_dir_path, 'clf.db')
+    with sqlite3.connect(project_db_path) as project_conn:
+        project_cursor = project_conn.cursor()
+        project_cursor.executescript(sql_script)
+        project_conn.commit()
+    
+    resp = flask.make_response(flask.jsonify({
+        'id': project_id,
+        'tag': project_tag,
+        'title': project_title,
+        'type': project_type
+    }), 201)
+    utils.populate_headers_json(resp)
+    return resp
+
+
+@app.route('/api/admin/users/create', methods=['POST'])
+@login_required
+def admin_create_user():
+    """Create a new user."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    data = flask.request.get_json()
+    username = data.get('username', '').strip()
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+    
+    # Validate input
+    if not username or not name or not email or not password:
+        resp = flask.make_response('Missing required fields', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    # Check username format (lowercase letters only)
+    import re
+    if not re.fullmatch(r'[a-z]+', username):
+        resp = flask.make_response('Username must consist of lowercase letters only', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    cursor = authentication.cursor
+    
+    # Check if username already exists
+    for existing_username in cursor.execute(
+        'SELECT username FROM participants'
+    ):
+        if existing_username[0] == username:
+            resp = flask.make_response('Username already exists', 400)
+            utils.populate_headers_plain(resp)
+            return resp
+    
+    # Create the user
+    cursor.execute(
+        '''
+        INSERT INTO participants (username, name, email)
+        VALUES (?, ?, ?)''',
+        (username, name, email))
+    user_id = cursor.lastrowid
+    
+    # Set password
+    password_hash = authentication.hashpass(password).decode('ascii')
+    cursor.execute(
+        '''
+        INSERT INTO passwd (hash, user_id)
+        VALUES (?, ?)''',
+        (password_hash, user_id))
+    
+    authentication.dbconn.commit()
+    
+    # Update USER_DB
+    USER_DB[str(user_id)] = users.User(username, user_id)
+    USER_DB_INV[username] = str(user_id)
+    
+    resp = flask.make_response(flask.jsonify({
+        'id': user_id,
+        'username': username,
+        'name': name,
+        'email': email
+    }), 201)
+    utils.populate_headers_json(resp)
+    return resp
+
+
+@app.route('/api/admin/permissions/set', methods=['POST'])
+@login_required
+def admin_set_permissions():
+    """Set user permissions for a project."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    data = flask.request.get_json()
+    user_id = data.get('user_id')
+    project_id = data.get('project_id')
+    permission_type = data.get('permission_type')  # 'read', 'write', or 'none'
+    
+    # Validate input
+    if user_id is None or project_id is None or permission_type is None:
+        resp = flask.make_response('Missing required fields', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    if permission_type not in ['read', 'write', 'none']:
+        resp = flask.make_response('Invalid permission type', 400)
+        utils.populate_headers_plain(resp)
+        return resp
+    
+    cursor = authentication.cursor
+    
+    # Remove existing permissions for this user and project
+    cursor.execute(
+        'DELETE FROM permissions WHERE `user_id`=? AND `project_id`=?',
+        (user_id, project_id))
+    
+    # Add new permission if not 'none'
+    if permission_type != 'none':
+        cursor.execute(
+            '''
+            INSERT INTO permissions (`user_id`, `project_id`, type)
+            VALUES (?, ?, ?)
+            ''',
+            (user_id, project_id, permission_type))
+    
+    authentication.dbconn.commit()
+    
+    resp = flask.make_response(flask.jsonify({
+        'user_id': user_id,
+        'project_id': project_id,
+        'permission': permission_type
+    }), 200)
+    utils.populate_headers_json(resp)
+    return resp
+
+
+@app.route('/api/admin/permissions/list', methods=['GET'])
+@login_required
+def admin_list_permissions():
+    """Get all permissions."""
+    if not current_user.is_admin:
+        return flask.make_response('Unauthorized', 403)
+    
+    cursor = authentication.cursor
+    permissions = []
+    for user_id, project_id, permission_type in cursor.execute(
+        'SELECT `user_id`, `project_id`, type FROM permissions'
+    ):
+        permissions.append({
+            'user_id': user_id,
+            'project_id': project_id,
+            'permission': permission_type
+        })
+    
+    resp = flask.make_response(flask.jsonify(permissions), 200)
+    utils.populate_headers_json(resp)
+    return resp
+

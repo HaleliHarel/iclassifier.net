@@ -51,6 +51,12 @@ def get_project_info(project_tag):
     return dict(zip(colnames, data_tuple))
 
 
+def is_admin_user(username):
+    """Check if a user is an admin."""
+    admin_users = ['haleliharel', 'orlygoldwasser', 'dmitrynikolaev']
+    return username in admin_users
+
+
 def check_user_access(user_id, project_tag):
     # TODO: convert to proper SQL code later
     project_id = None
@@ -73,21 +79,3 @@ def check_user_access(user_id, project_tag):
         print(f'Could not find permission for {user_id=}, {project_id=}, and {project_tag=}')
         return None
 
-    # try:
-    #     project_id = cursor.execute(
-    #         f"SELECT id FROM `project_info` WHERE `project_id` = '{project_tag}'"
-    #     ).fetchone()[0]
-    # except Exception as e:
-    #     print(f'Error while obtaining project id: {e}')
-    #     return None
-    
-    # try:
-    #     return cursor.execute(
-    #         f'''SELECT type FROM permissions 
-    #            WHERE `project_id` = ?
-    #            AND `user_id` = ?''',
-    #         (project_id, int(user_id))
-    #     ).fetchone()[0]
-    # except Exception as e:
-    #     print(f'Error while checking permissions: {e}')
-    #     return None
