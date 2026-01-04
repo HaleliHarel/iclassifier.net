@@ -140,7 +140,7 @@ def set_project_metadata(project_metadata, auth_conn):
     with open('project_types.json', 'r', encoding='utf8') as inp:
         project_type_dict = json.load(inp)
     project_type_dict[
-        project_metadata['project_id']] = project_metadata['project_types']
+        project_metadata['project_id']] = project_metadata['project_type']
     with open('project_types.json', 'w', encoding='utf8') as out:
         json.dump(project_type_dict, out, indent=2)
         
