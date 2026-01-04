@@ -30,8 +30,9 @@
 	<script src="{{ js_store_url }}/view.js"></script>
 
 	<script>
-		project = "{{ project_tag }}";
-		projectType = "{{ project_type }}";
+		const siteURL = "{{ base_url }}",
+		      project = "{{ project_tag }}",
+		      projectType = "{{ project_type }}";
 	</script>
 </head>
 
@@ -47,7 +48,7 @@
 		</div>
 	</header>
 	<div id="main" style="margin-top: 20px;">
-		<form action="{{ base_url }}/reports">
+		<form action="{{ base_url }}/input">
             <input type="submit" value="Go to the project list" />
         </form>
 		<!-- <h4><label for="project-select">Select a project:</label></h4>

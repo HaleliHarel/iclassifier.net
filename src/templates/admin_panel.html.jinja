@@ -1,0 +1,444 @@
+<div id="admin-panel">
+    <h2>Admin Panel</h2>
+    
+    <details class="admin-section">
+        <summary><h3>Projects</h3></summary>
+        <div class="admin-section-content">
+            <h4>Create New Project</h4>
+            <form id="create-project-form" class="admin-form">
+                <div class="admin-form-group">
+                    <label for="project_name">Project Name:</label>
+                    <input type="text" name="project_name" id="project_name" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="project_tag">Project Tag (lowercase letters only):</label>
+                    <input type="text" name="project_tag" id="project_tag" pattern="[a-z]+" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="project_type">Project Type:</label>
+                    <select name="project_type" id="project_type" required>
+                        <option value="">Select a type</option>
+                        <option value="hieroglyphic">Hieroglyphic</option>
+                        <option value="cuneiform">Cuneiform</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <button type="submit" class="admin-button">Create Project</button>
+            </form>
+            <div id="create-project-message"></div>
+            
+            <h4>Existing Projects</h4>
+            <div id="admin-projects-list" class="admin-list">
+                {% for project in all_projects %}
+                <div class="admin-item">
+                    <strong>{{ project.title }}</strong> ({{ project.tag }})
+                    <br>Type: {{ project.type or 'N/A' }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </details>
+    
+    <details class="admin-section">
+        <summary><h3>Users</h3></summary>
+        <div class="admin-section-content">
+            <h4>Create new user</h4>
+            <form id="create-user-form" class="admin-form">
+                <div class="admin-form-group">
+                    <label for="name">Full name:</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="username">Username (lowercase letters only):</label>
+                    <input type="text" name="username" id="username" pattern="[a-z]+" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <button type="submit" class="admin-button">Create User</button>
+            </form>
+            <div id="create-user-message"></div>
+            
+            <h4>Existing users</h4>
+            <div id="admin-users-list" class="admin-list">
+                {% for user in users %}
+                <div class="admin-item">
+                    <strong>{{ user.name }}</strong> ({{ user.username }})
+                    <br>Email: {{ user.email }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </details>
+    
+    <details class="admin-section">
+        <summary><h3>User Permissions</h3></summary>
+        <div class="admin-section-content">
+            <h4>Select User</h4>
+            <div class="admin-form-group">
+                <label for="user-select">User:</label>
+                <select id="user-select" class="admin-select">
+                    <option value="">-- Select a user --</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" data-username="{{ user.username }}" data-name="{{ user.name }}">
+                        {{ user.name }} ({{ user.username }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div id="admin-permissions-container" style="display: none;">
+                <h4>Permissions for <span id="selected-user-name"></span></h4>
+                <table class="admin-permissions-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody id="permissions-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+</div>
+
+<script>
+// Admin panel functionality (inlined)
+const AdminPanel = {
+    projects: [],
+    users: [],
+    permissions: [],
+    
+    init: async function() {
+        // Load initial data for dynamic rendering
+        await this.loadProjects();
+        await this.loadPermissions();
+        // console.log('Loaded projects:', this.projects);
+        // console.log('Loaded permissions:', this.permissions);
+        // Just attach event handlers - users list is server-rendered
+        this.attachEventHandlers();
+    },
+    
+    loadProjects: async function() {
+        try {
+            const response = await fetch('/api/admin/projects/list', {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                this.projects = await response.json();
+            } else {
+                console.error('Failed to load projects');
+            }
+        } catch (error) {
+            console.error('Error loading projects:', error);
+        }
+    },
+    
+    loadUsers: async function() {
+        try {
+            const response = await fetch('/api/admin/users/list', {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                this.users = await response.json();
+            } else {
+                console.error('Failed to load users');
+            }
+        } catch (error) {
+            console.error('Error loading users:', error);
+        }
+    },
+    
+    loadPermissions: async function() {
+        try {
+            const response = await fetch('/api/admin/permissions/list', {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                this.permissions = await response.json();
+            } else {
+                console.error('Failed to load permissions');
+            }
+        } catch (error) {
+            console.error('Error loading permissions:', error);
+        }
+    },
+    
+    render: function() {
+        this.renderProjects();
+        this.renderUsers();
+        this.renderPermissions();
+    },
+    
+    renderProjects: function() {
+        const projectsList = document.getElementById('admin-projects-list');
+        if (!projectsList) return;
+        
+        projectsList.innerHTML = '';
+        this.projects.forEach(project => {
+            const projectEl = document.createElement('div');
+            projectEl.className = 'admin-item';
+            projectEl.innerHTML = `
+                <strong>${project.title}</strong> (${project.tag})
+                <br>Type: ${project.type || 'N/A'}
+            `;
+            projectsList.appendChild(projectEl);
+        });
+    },
+    
+    renderUsers: function() {
+        const usersList = document.getElementById('admin-users-list');
+        if (!usersList) return;
+        
+        usersList.innerHTML = '';
+        this.users.forEach(user => {
+            const userEl = document.createElement('div');
+            userEl.className = 'admin-item';
+            userEl.innerHTML = `
+                <strong>${user.name}</strong> (${user.username})
+                <br>Email: ${user.email}
+            `;
+            usersList.appendChild(userEl);
+        });
+    },
+    
+    renderPermissions: function(userId) {
+        const permissionsContainer = document.getElementById('admin-permissions-container');
+        const tbody = document.getElementById('permissions-tbody');
+        if (!permissionsContainer || !tbody) return;
+        
+        if (!userId) {
+            permissionsContainer.style.display = 'none';
+            return;
+        }
+        
+        permissionsContainer.style.display = 'block';
+        tbody.innerHTML = '';
+        
+        // console.log('Rendering permissions for user:', userId);
+        // console.log('Available projects:', this.projects);
+        // console.log('Number of projects:', this.projects.length);
+        
+        this.projects.forEach(project => {
+            const permission = this.permissions.find(
+                p => p.user_id === parseInt(userId) && p.project_id === project.id
+            );
+            const permissionType = permission ? permission.permission : 'none';
+            
+            const row = document.createElement('tr');
+            
+            const projectCell = document.createElement('td');
+            projectCell.innerHTML = `<strong>${project.title}</strong><br><small>${project.tag}</small>`;
+            row.appendChild(projectCell);
+            
+            const permCell = document.createElement('td');
+            const select = document.createElement('select');
+            select.className = 'permission-select';
+            select.dataset.userId = userId;
+            select.dataset.projectId = project.id;
+            select.innerHTML = `
+                <option value="none" ${permissionType === 'none' ? 'selected' : ''}>None</option>
+                <option value="read" ${permissionType === 'read' ? 'selected' : ''}>Read</option>
+                <option value="write" ${permissionType === 'write' ? 'selected' : ''}>Write</option>
+            `;
+            permCell.appendChild(select);
+            row.appendChild(permCell);
+            
+            tbody.appendChild(row);
+        });
+    },
+    
+    attachEventHandlers: function() {
+        // Create Project Form
+        const createProjectForm = document.getElementById('create-project-form');
+        if (createProjectForm) {
+            createProjectForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.createProject();
+            });
+        }
+        
+        // Create User Form
+        const createUserForm = document.getElementById('create-user-form');
+        if (createUserForm) {
+            createUserForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.createUser();
+            });
+        }
+        
+        // User selection for permissions
+        const userSelect = document.getElementById('user-select');
+        if (userSelect) {
+            userSelect.addEventListener('change', (e) => {
+                const userId = e.target.value;
+                if (userId) {
+                    const selectedOption = e.target.options[e.target.selectedIndex];
+                    const userName = selectedOption.dataset.name;
+                    document.getElementById('selected-user-name').textContent = userName;
+                    this.renderPermissions(userId);
+                } else {
+                    this.renderPermissions(null);
+                }
+            });
+        }
+        
+        // Permission selects
+        document.addEventListener('change', async (e) => {
+            if (e.target.classList.contains('permission-select')) {
+                const userId = parseInt(e.target.dataset.userId);
+                const projectId = parseInt(e.target.dataset.projectId);
+                const permissionType = e.target.value;
+                await this.setPermission(userId, projectId, permissionType);
+            }
+        });
+    },
+    
+    createProject: async function() {
+        const form = document.getElementById('create-project-form');
+        const messageEl = document.getElementById('create-project-message');
+        
+        const data = {
+            tag: form.querySelector('[name="project_tag"]').value.trim(),
+            name: form.querySelector('[name="project_name"]').value.trim(),
+            type: form.querySelector('[name="project_type"]').value.trim()
+        };
+        
+        try {
+            const response = await fetch('/api/admin/projects/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                messageEl.textContent = `Project "${result.title}" created successfully!`;
+                messageEl.className = 'message success';
+                form.reset();
+                await this.loadProjects();
+                await this.loadPermissions();
+                this.renderProjects();
+                // Re-render permissions if a user is selected
+                const userSelect = document.getElementById('user-select');
+                if (userSelect && userSelect.value) {
+                    this.renderPermissions(userSelect.value);
+                }
+            } else {
+                const error = await response.text();
+                messageEl.textContent = `Error: ${error}`;
+                messageEl.className = 'message error';
+            }
+        } catch (error) {
+            messageEl.textContent = `Error: ${error.message}`;
+            messageEl.className = 'message error';
+        }
+    },
+    
+    createUser: async function() {
+        const form = document.getElementById('create-user-form');
+        const messageEl = document.getElementById('create-user-message');
+        
+        const data = {
+            username: form.querySelector('[name="username"]').value.trim(),
+            name: form.querySelector('[name="name"]').value.trim(),
+            email: form.querySelector('[name="email"]').value.trim(),
+            password: form.querySelector('[name="password"]').value
+        };
+        
+        try {
+            const response = await fetch('/api/admin/users/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                messageEl.textContent = `User "${result.name}" created successfully!`;
+                messageEl.className = 'message success';
+                form.reset();
+                await this.loadPermissions();
+                await this.loadUsers();
+                this.renderUsers();
+                // Refresh user select dropdown
+                const userSelect = document.getElementById('user-select');
+                if (userSelect) {
+                    const currentValue = userSelect.value;
+                    const option = document.createElement('option');
+                    option.value = result.id;
+                    option.dataset.username = result.username;
+                    option.dataset.name = result.name;
+                    option.textContent = `${result.name} (${result.username})`;
+                    userSelect.appendChild(option);
+                }
+            } else {
+                const error = await response.text();
+                messageEl.textContent = `Error: ${error}`;
+                messageEl.className = 'message error';
+            }
+        } catch (error) {
+            messageEl.textContent = `Error: ${error.message}`;
+            messageEl.className = 'message error';
+        }
+    },
+    
+    setPermission: async function(userId, projectId, permissionType) {
+        try {
+            const response = await fetch('/api/admin/permissions/set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    user_id: userId,
+                    project_id: projectId,
+                    permission_type: permissionType
+                })
+            });
+            
+            if (response.ok) {
+                await this.loadPermissions();
+                console.log('Permission updated successfully');
+            } else {
+                const error = await response.text();
+                console.error('Error setting permission:', error);
+                alert('Error setting permission: ' + error);
+            }
+        } catch (error) {
+            console.error('Error setting permission:', error);
+            alert('Error setting permission: ' + error.message);
+        }
+    }
+};
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const adminPanel = document.getElementById('admin-panel');
+        if (adminPanel && adminPanel.style.display !== 'none') {
+            AdminPanel.init();
+        }
+    });
+} else {
+    const adminPanel = document.getElementById('admin-panel');
+    if (adminPanel && adminPanel.style.display !== 'none') {
+        AdminPanel.init();
+    }
+}
+</script>

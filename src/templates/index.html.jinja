@@ -1,5 +1,10 @@
 {% extends "base.html.jinja" %}
 {% block title %}iClassifier logout{% endblock %}
+{% block head %}
+    {% if is_admin %}
+    <link rel="stylesheet" href="/static/css/admin.css">
+    {% endif %}
+{% endblock %}
 {% block body %}
     {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -39,6 +44,10 @@
       <input type="submit" value="Open project report">
     </form>
     <br/>
+
+    {% if is_admin %}
+    {% include "admin_panel.html.jinja" %}
+    {% endif %}
 
     <form method="POST" action="/input/logout">
         <input type="submit" value="Logout">
