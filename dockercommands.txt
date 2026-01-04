@@ -1,3 +1,7 @@
+docker build -t macleginn/iclassifier:backend .
+
+docker push macleginn/iclassifier:backend
+
 docker run -it -p 127.0.0.1:8000:8000 --mount type=bind,src="$(pwd)/data",target="/home/iclassifier/data" --name iclfpod_c
 
 docker run -it -p 127.0.0.1:8000:8000 --mount type=bind,src="$(pwd)/data",target="/home/iclassifier/data" macleginn/iclassifier:backend
