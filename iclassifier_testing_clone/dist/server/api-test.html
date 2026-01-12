@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testAPI() {
+            const results = document.getElementById('results');
+            results.innerHTML = 'Testing API endpoints...<br>';
+            
+            try {
+                // Test ping endpoint
+                const pingResponse = await fetch('/api/ping');
+                results.innerHTML += `Ping status: ${pingResponse.status}<br>`;
+                const pingData = await pingResponse.json();
+                results.innerHTML += `Ping data: ${JSON.stringify(pingData)}<br><br>`;
+                
+                // Test projects list
+                const projectsResponse = await fetch('/api/iclassifier/projects/list');
+                results.innerHTML += `Projects status: ${projectsResponse.status}<br>`;
+                const projectsData = await projectsResponse.json();
+                results.innerHTML += `Projects data: ${JSON.stringify(projectsData)}<br><br>`;
+                
+            } catch (error) {
+                results.innerHTML += `Error: ${error.message}<br>`;
+            }
+        }
+        
+        // Run test when page loads
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html>
