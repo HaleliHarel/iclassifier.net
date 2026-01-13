@@ -1,6 +1,6 @@
 [build]
   base = "iclassifier_testing_clone"
-  command = "npm run build:client"
+  command = "npm run build:client && cp ../index.html dist/spa/home.html"
   functions = "netlify/functions"
   publish = "dist/spa"
 
@@ -15,7 +15,44 @@
   status = 200
   to = "/.netlify/functions/api/:splat"
 
+# Serve static homepage at root
 [[redirects]]
-  from = "/*"
+  from = "/"
+  to = "/home.html"
+  status = 200
+
+# Handle React app routes - redirect to the React app index.html
+[[redirects]]
+  from = "/projects"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/project/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/reports/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/bug-report"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact-us"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/user-manual"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/debug-projects"
   to = "/index.html"
   status = 200

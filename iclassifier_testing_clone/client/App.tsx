@@ -38,7 +38,6 @@ const ProjectAwareRoutes = () => {
   
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/projects" replace />} />
       <Route path="/projects" element={<Index />} />
       <Route path="/reports" element={<Index />} />
       <Route path="/project" element={<Navigate to="/projects" replace />} />
