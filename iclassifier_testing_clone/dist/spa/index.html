@@ -1,22 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>iClassifier Reports</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
     
-    <!-- Favicon Package -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#0d9488">
-    <script type="module" crossorigin src="/assets/index-CrCh16wG.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-D1Vu6O-w.css">
-  </head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8KE91TC09H"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-8KE91TC09H');
+    </script>
+    
+    <link rel="stylesheet" href="style.css">
+    <title>The homepage of the iClassifier project</title>
+    <meta name="description" content="Collaborations Ancient Egyptian script, corpus studies.">
+</head>
 
-  <body>
-    <div id="root"></div>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <div class="header-left">
+                <div class="logo-container">
+                    <a href="https://iclassifier.net" target="_blank">
+                        <img src="/images/iclassifier-logo-new.png" alt="iClassifier logo" class="logo">
+                    </a>
+                    <div class="app-info">
+                        <p class="app-subtitle">A research tool for the scientific analysis of classifiers</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="header-nav">
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link active">Home</a></li>
+                    <li><a href="/projects" class="nav-link">Projects</a></li>
+                    <li><a href="/iclassifier/index.html" class="nav-link">About <em>iClassifier</em></a></li>
+                    <li><a href="/publications/index.html" class="nav-link">Publications</a></li>
+                    <li><a href="/about/index.html" class="nav-link">Team</a></li>
+                    <li><a href="/contact/index.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  </body>
+<main id="main" class="hero" role="main">
+
+ <div class="intro" role="region" aria-labelledby="intro-heading">
+    <h2 id="intro-heading" class="visually-hidden">Introduction to iClassifier</h2>
+    <p> <i><strong>iClassifier</strong></i> (©Goldwasser,Harel,Nikolaev) is an open-source and collaborative research platform for analyzing and visualizing 
+      classifier systems in ancient scripts. It provides a toolset to annotate, compare, and explore classifiers (aka determinatives) within an extensive text corpus, enabling researchers to move beyond static word lists 
+      toward dynamic, network-based representations of ancient lexicons. By aligning philological precision with computational methods, users access the system in its contexts of use,
+      and browse through categories and concepts across time and genres.
+    </p>
+    <p>
+      The platform offers both an accessible web interface for interactive exploration and a 
+     backend for advanced linguistic and philological analysis. Users can generate classifier lists, 
+      track diachronic change, and visualize co-occurrence patterns as networks. Designed for 
+      collaboration, <i><strong>iClassifier</strong></i> integrates with major linguistic corpora and databases, 
+      making it a versatile tool for Egyptologists, Assyriologists, Sinologists, Linguists and other scholars 
+      who seek to investigate language structure in context. <strong>Our research explores what categories humans share across cultures and what categories are unique, applying a typological approach.</strong>
+    </p>
+    
+    <div style="text-align: center; margin: 2rem 0;">
+      <a href="/projects" style="display: inline-block; background-color: #0891b2; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 1.1rem; transition: background-color 0.2s;">
+        🚀 Explore Projects
+      </a>
+    </div>
+  </div>
+
+  <h2 id="dynamic-heading">Turning the lexicon into networks of concepts and categories</h2>
+
+<script>
+    setTimeout(function() {
+      document.getElementById('dynamic-heading').innerHTML =
+        'Turning texts into networks of <span style="color:blue;">concepts</span> and <span style="color:darkred;">categories</span>';
+    }, 10000);
+  </script>
+
+
+<figure class="demo" role="region" aria-labelledby="demo-caption">
+  <video
+    id="demo-video"
+    class="demo-video"
+    muted
+    playsinline
+    loop
+    preload="metadata"
+    poster="images/startnetwork.png"
+    aria-describedby="demo-caption"
+  >
+    <source src="images/demoiclassifier.webm" type="video/webm">
+    <source src="images/demoiclassifier.mp4"  type="video/mp4">
+    <p>Your browser does not support the video tag. <a href="images/demoiclassifier.mp4">Download the video</a> to view the demonstration.</p>
+  </video>
+
+  <figcaption class="demo-caption" id="demo-caption">
+    <p class="lead">
+      A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
+    </p>
+    <p class="meta">
+      Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in
+      <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
+    </p>
+  </figcaption>
+</figure>
+
+
+</main>
+
+<footer id="footer" role="contentinfo" aria-label="Site footer">
+  <span class="footer-text"><i>©iClassifier</i>, (Goldwasser, Harel, Nikolaev), 2019–2026.</span>
+
+  <div class="footer-logos" style="display:none;" aria-label="Partner organizations">
+<img src="/images/logo_ltr.png" alt="Hebrew University of Jerusalem logo" width="auto" height="28">
+<img src="/images/Israel_Science_Foundation.svg" alt="Israel Science Foundation logo" width="auto" height="28">
+<a href="https://www.archaeomind.net/" target="_blank" rel="noopener noreferrer" aria-label="Visit ArchaeoMind website">
+  <img src="/images/lablogo_archaeomind.png" alt="ArchaeoMind lab logo" width="auto" height="28">
+</a>
+  </div>
+  <script>
+    window.addEventListener('scroll', function() {
+    var footerLogos = document.querySelector('.footer-logos');
+    // Check if scrolled to bottom
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
+      footerLogos.style.display = 'block';
+    } else {
+      footerLogos.style.display = 'none';
+    }
+    }, { passive: true });
+  </script>
+</footer>
+
+<script>
+  (function () {
+    'use strict';
+    const footer = document.getElementById('footer');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const nearBottom = (window.innerHeight + y) >= (document.body.offsetHeight - 24);
+
+      if (goingDown || nearBottom) {
+        footer.classList.add('show');
+      } else {
+        footer.classList.remove('show');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    footer.classList.remove('show'); // start hidden
+  })();
+</script>
+
+<script>
+  window.addEventListener('load', function () {
+    'use strict';
+    const v = document.getElementById('demo-video');
+    if (v && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      // short delay so users perceive the poster, then play
+      setTimeout(() => v.play().catch(() => {}), 600);
+    }
+  });
+</script>
+
+</body>
+
 </html>
