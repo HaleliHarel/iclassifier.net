@@ -1,8 +1,8 @@
 [build]
-  base = "iclassifier_testing_clone"
-  command = "npm run build:client && cp ../index.html dist/spa/home.html"
-  functions = "netlify/functions"
-  publish = "dist/spa"
+  base = "."
+  command = "cd iclassifier_testing_clone && npm run build:client && cp index.html dist/spa/home.html && cp ../index.html dist/spa/static-home.html && cp ../style.css dist/spa/ && cp -r ../images dist/spa/ && cp -r ../about dist/spa/ && cp -r ../contact dist/spa/ && cp -r ../publications dist/spa/ && cp -r ../iclassifier dist/spa/"
+  functions = "iclassifier_testing_clone/netlify/functions"
+  publish = "iclassifier_testing_clone/dist/spa"
 
 
 [functions]
@@ -18,41 +18,41 @@
 # Serve static homepage at root
 [[redirects]]
   from = "/"
-  to = "/home.html"
+  to = "/static-home.html"
   status = 200
 
-# Handle React app routes - redirect to the React app index.html
+# Handle React app routes - redirect to the React app index.html  
 [[redirects]]
   from = "/projects"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/project/*"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/reports/*"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/bug-report"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/contact-us"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/user-manual"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
 
 [[redirects]]
   from = "/debug-projects"
-  to = "/index.html"
+  to = "/home.html"
   status = 200
