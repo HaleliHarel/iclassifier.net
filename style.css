@@ -254,7 +254,7 @@ h3 {
 }
 
 .logo {
-  height: 28px;
+  height: 40px;
   width: auto;
   filter: none;
   flex-shrink: 0;
@@ -737,7 +737,7 @@ li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
   }
   
   .logo {
-    height: 28px;
+    height: 32px;
   }
   
   .app-subtitle {
