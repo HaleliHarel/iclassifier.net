@@ -218,12 +218,14 @@ body.page-publications #main,
 body.page-team #main,
 body.page-contact #main {
   color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 body.page-publications #main *,
 body.page-team #main *,
 body.page-contact #main * {
   color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
 }
 
 body.page-publications #main a,
@@ -239,6 +241,14 @@ body.page-contact #main a:visited,
 body.page-contact #main a *,
 body.page-contact #main a:visited * {
   color: #0645ad !important;
+  -webkit-text-fill-color: #0645ad !important;
+}
+
+/* Additional Team page enforcement for lower-page list/content readability */
+body.page-team #main :not(a):not(a *) {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  opacity: 1 !important;
 }
 
 /* =========================
