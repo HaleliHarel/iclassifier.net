@@ -213,6 +213,34 @@ h3 {
   color: rgb(65, 69, 69); 
 }
 
+/* Readability override for Publications, Team, and Contact pages */
+body.page-publications #main,
+body.page-team #main,
+body.page-contact #main {
+  color: #000 !important;
+}
+
+body.page-publications #main *,
+body.page-team #main *,
+body.page-contact #main * {
+  color: inherit !important;
+}
+
+body.page-publications #main a,
+body.page-publications #main a:visited,
+body.page-publications #main a *,
+body.page-publications #main a:visited *,
+body.page-team #main a,
+body.page-team #main a:visited,
+body.page-team #main a *,
+body.page-team #main a:visited *,
+body.page-contact #main a,
+body.page-contact #main a:visited,
+body.page-contact #main a *,
+body.page-contact #main a:visited * {
+  color: #0645ad !important;
+}
+
 /* =========================
    Header / Layout
    ========================= */
@@ -650,6 +678,7 @@ li [data-symbol="𓁻"]::before { --node-color:#0ea5e9; }
   .app-subtitle {
     font-size: 1rem;
   }
+
 }
 
 @media (max-width: 768px) {
