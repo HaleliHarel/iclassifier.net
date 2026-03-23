@@ -307,7 +307,7 @@ const NETWORK_DEFAULTS_BY_TYPE: Record<Project["type"], Required<NetworkDefaults
     clfLevels: [...DEFAULT_NETWORK_CLF_LEVELS],
     clfTypes: [...DEFAULT_NETWORK_CLF_TYPES],
     useAllData: false,
-    useUnicode: false
+    useUnicode: true
   },
   cuneiform: {
     clfLevels: [...DEFAULT_NETWORK_CLF_LEVELS],

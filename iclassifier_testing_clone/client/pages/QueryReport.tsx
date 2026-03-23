@@ -62,6 +62,11 @@ let VisNetwork: any = null;
 let VisDataSet: any = null;
 const classifierImageCache = new Map<string, string>(); // cache extended/JSesh images by MDC
 const BROKEN_IMAGE_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'/%3E";
+const getInteractionByFrozenState = (frozen: boolean) => ({
+  dragNodes: !frozen,
+  dragView: !frozen,
+  zoomView: !frozen,
+});
 const UNIFIED_EGYPTIAN_PROJECT_ID = "ancient-egyptian";
 
 interface LemmaMultiSelectProps {
@@ -616,7 +621,7 @@ export default function QueryReport() {
   const [semanticFieldMaxFields, setSemanticFieldMaxFields] = useState(12);
   const [semanticFieldMaxLemmas, setSemanticFieldMaxLemmas] = useState(30);
   const [semanticNetworkLoading, setSemanticNetworkLoading] = useState(false);
-  const [isSemanticNetworkFrozen, setIsSemanticNetworkFrozen] = useState(true);
+  const [isSemanticNetworkFrozen, setIsSemanticNetworkFrozen] = useState(false);
   const [excludeProperNames, setExcludeProperNames] = useState(true);
 
   const fullDataProjectId = showResults && primaryProjectId ? primaryProjectId : "";
@@ -1376,19 +1381,27 @@ export default function QueryReport() {
       // Handle JSesh rendering for hieroglyphic classifiers (legacy approach)
       if (selectedProjectInfo?.type === "hieroglyphic" && classifierDisplayMode === "visual") {
         const classifierNodes = networkData.nodes.filter((node: any) => node.type === "classifier");
+        console.log(`[Network] Processing ${classifierNodes.length} classifier nodes for JSesh rendering`);
+        
         await Promise.all(
           classifierNodes.map(async (node: any) => {
             const mdc = node.mdc || node.label;
-            const glyph = typeof mdc === "string" ? mdc2uni[mdc] : undefined;
+            console.log(`[Network] Processing classifier node: ${node.id}, mdc: ${mdc}`);
+
+            const normalizedMdc = typeof mdc === "string" ? mdc.trim() : "";
+            const glyph = normalizedMdc ? mdc2uni[normalizedMdc] : undefined;
             const hasUnicodeGlyph = typeof glyph === "string" && (glyph.codePointAt(0) || 0) >= 256;
+            console.log(`[Network] ${mdc} - hasUnicodeGlyph: ${hasUnicodeGlyph}, useUnicode: ${useUnicode}`);
 
             // Use JSesh image if no Unicode glyph available OR if useUnicode is false
             if (!useUnicode || !hasUnicodeGlyph) {
-              const cacheKey = typeof mdc === "string" ? mdc : "";
+              console.log(`[Network] Will fetch JSesh for ${mdc}`);
+              const cacheKey = normalizedMdc;
               if (!cacheKey) return;
               const cached = cacheKey ? classifierImageCache.get(cacheKey) : null;
               const cachedImage = cached ? wrapClassifierImage(cached) : null;
               if (cachedImage) {
+                console.log(`[Network] Using cached image for ${mdc}`);
                 classifierImageCache.set(cacheKey, cachedImage);
                 nodes.update({
                   id: node.id,
@@ -1412,6 +1425,7 @@ export default function QueryReport() {
 
               const extendedSignData = await fetchExtendedSignDataUrl(cacheKey);
               if (extendedSignData) {
+                console.log(`[Network] Using extended sign data for ${mdc}`);
                 const wrappedImage = wrapClassifierImage(extendedSignData);
                 classifierImageCache.set(cacheKey, wrappedImage);
                 nodes.update({
@@ -1434,10 +1448,13 @@ export default function QueryReport() {
                 return;
               }
 
-              const base64 = await fetchJseshBase64(mdc, getJseshRenderHeight(CLF_NODE_HEIGHT), true);
+              console.log(`[Network] Fetching JSesh base64 for ${mdc}`);
+              const base64 = await fetchJseshBase64(cacheKey, getJseshRenderHeight(CLF_NODE_HEIGHT), true);
               if (base64) {
+                console.log(`[Network] Got JSesh base64 (${base64.length} chars) for ${mdc}`);
                 const url = wrapClassifierImage(getJseshImageUrl(base64));
-                classifierImageCache.set(cacheKey || mdc, url);
+                console.log(`[Network] Created wrapped image URL for ${mdc}:`, url.substring(0, 100) + '...');
+                classifierImageCache.set(cacheKey, url);
                 nodes.update({
                   id: node.id,
                   shape: "image",
@@ -1455,7 +1472,12 @@ export default function QueryReport() {
                   widthConstraint: { minimum: CLF_NODE_WIDTH, maximum: CLF_NODE_WIDTH },
                   heightConstraint: { minimum: CLF_NODE_HEIGHT, maximum: CLF_NODE_HEIGHT }
                 });
+                console.log(`[Network] Updated node ${node.id} with JSesh image`);
+              } else {
+                console.warn(`[Network] Failed to get JSesh base64 for ${mdc}`);
               }
+            } else {
+              console.log(`[Network] Using Unicode glyph for ${mdc}: ${glyph}`);
             }
           })
         );
@@ -1479,10 +1501,6 @@ export default function QueryReport() {
           }
         }
         network.fit({ animation: { duration: 500, easingFunction: "easeInOutQuad" } });
-        network.setOptions({ physics: { enabled: false } });
-        if (typeof network.stopSimulation === "function") {
-          network.stopSimulation();
-        }
       };
       
       const fallbackId = window.setTimeout(() => finalize(), 9000);
@@ -1568,7 +1586,10 @@ export default function QueryReport() {
     const network = semanticNetworkInstanceRef.current;
     if (!network) return;
     if (isSemanticNetworkFrozen) {
-      network.setOptions({ physics: { ...semanticNetworkPhysics, enabled: true } });
+      network.setOptions({
+        physics: { ...semanticNetworkPhysics, enabled: true },
+        interaction: getInteractionByFrozenState(false),
+      });
       if (typeof network.startSimulation === "function") {
         network.startSimulation();
       }
@@ -1577,7 +1598,10 @@ export default function QueryReport() {
       if (typeof network.stopSimulation === "function") {
         network.stopSimulation();
       }
-      network.setOptions({ physics: { enabled: false } });
+      network.setOptions({
+        physics: { enabled: false },
+        interaction: getInteractionByFrozenState(true),
+      });
       setIsSemanticNetworkFrozen(true);
     }
   }, [isSemanticNetworkFrozen, semanticNetworkPhysics]);
@@ -1599,6 +1623,7 @@ export default function QueryReport() {
     const network = new VisNetwork(semanticNetworkRef.current, { nodes, edges }, semanticNetworkOptions);
     semanticNetworkInstanceRef.current = network;
     setIsSemanticNetworkFrozen(false);
+    network.setOptions({ interaction: getInteractionByFrozenState(false) });
 
     // Ensure the network container doesn't exceed parent bounds
     if (semanticNetworkRef.current && semanticNetworkRef.current.parentElement) {
@@ -1640,12 +1665,15 @@ export default function QueryReport() {
         }
       }
       network.fit({ animation: { duration: 400, easingFunction: "easeInOutQuad" } });
-      network.setOptions({ physics: { enabled: false } });
       if (typeof network.stopSimulation === "function") {
         network.stopSimulation();
       }
-      setSemanticNetworkLoading(false);
+      network.setOptions({
+        physics: { enabled: false },
+        interaction: getInteractionByFrozenState(true),
+      });
       setIsSemanticNetworkFrozen(true);
+      setSemanticNetworkLoading(false);
     };
 
     const fallbackId = window.setTimeout(() => finalize(), 9000);
@@ -1727,7 +1755,10 @@ export default function QueryReport() {
       if (typeof network.stopSimulation === "function") {
         network.stopSimulation();
       }
-      network.setOptions({ physics: { enabled: false } });
+      network.setOptions({
+        physics: { enabled: false },
+        interaction: getInteractionByFrozenState(true),
+      });
     }
     setIsSemanticNetworkFrozen(true);
   }, [semanticFieldView]);
@@ -2336,10 +2367,10 @@ export default function QueryReport() {
                 </button>
               </div>
 
-              <div className="flex items-center justify-end">
+              <div className="flex items-center justify-start">
                 <button
                   onClick={toggleSemanticNetworkFreeze}
-                  className="rounded border border-gray-200 bg-white px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                  className="rounded border border-gray-200 bg-white px-2 py-1 text-xs font-bold text-gray-700 hover:bg-gray-50"
                 >
                   {isSemanticNetworkFrozen ? "Unfreeze" : "Freeze"}
                 </button>
@@ -2421,16 +2452,16 @@ export default function QueryReport() {
                     )}
                     <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-500 px-3 pb-3">
                       <button
-                        onClick={() => downloadNetworkPNG(networkInstanceRef.current, 96, "query-network-96dpi.png")}
+                        onClick={() => downloadNetworkPNG(networkInstanceRef.current, 96, "query-network-96dpi.png").catch(console.error)}
                         className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors text-sm"
                       >
                         PNG 96
                       </button>
                       <button
-                        onClick={() => downloadNetworkJPEG(networkInstanceRef.current, 300, "query-network-300dpi.jpg")}
+                        onClick={() => downloadNetworkPNG(networkInstanceRef.current, 300, "query-network-300dpi.png").catch(console.error)}
                         className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors text-sm"
                       >
-                        JPG 300
+                        PNG 300
                       </button>
                       <button
                         onClick={() => downloadNetworkSVGVector(networkInstanceRef.current, "query-network.svg")}

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Line Drawing Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+        
+        .file-input-label.dragover {
+            border-color: #667eea;
+            background: #e8eaff;
+        }
+        
+        .file-input-label p {
+            color: #666;
+            margin: 0;
+        }
+        
+        .preview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .preview-container.show {
+            display: grid;
+        }
+        
+        .preview-box {
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        
+        .preview-box h3 {
+            padding: 10px;
+            background: #f0f0f0;
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+        
+        .preview-box canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+        }
+        
+        .controls {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .controls.show {
+            display: block;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .control-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+        
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .control-value {
+            display: inline-block;
+            font-weight: 700;
+            color: #667eea;
+            margin-left: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message.show {
+            display: block;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image to Line Drawing Converter</h1>
+        <p class="subtitle">Convert your project thumbnail images to black and white line drawings</p>
+        
+        <div class="message" id="message"></div>
+        
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="imageInput" accept="image/*" multiple>
+                <label for="imageInput" class="file-input-label" id="dropZone">
+                    <p>📁 Click to upload or drag and drop</p>
+                    <p style="font-size: 12px; margin-top: 5px; color: #999;">PNG, JPG, JPEG</p>
+                </label>
+            </div>
+        </div>
+        
+        <div class="preview-container" id="previewContainer">
+            <div class="preview-box">
+                <h3>Original</h3>
+                <canvas id="originalCanvas"></canvas>
+            </div>
+            <div class="preview-box">
+                <h3>Line Drawing Preview</h3>
+                <canvas id="previewCanvas"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls" id="controls">
+            <div class="control-group">
+                <label>
+                    Edge Detection Strength
+                    <span class="control-value" id="strengthValue">2</span>
+                </label>
+                <input type="range" id="strengthSlider" min="1" max="5" value="2" step="1">
+            </div>
+            <div class="control-group">
+                <label>
+                    Contrast
+                    <span class="control-value" id="contrastValue">100</span>%
+                </label>
+                <input type="range" id="contrastSlider" min="50" max="150" value="100" step="5">
+            </div>
+        </div>
+        
+        <div class="button-group" id="buttonGroup" style="display: none;">
+            <button class="btn-secondary" onclick="resetConverter()">Clear</button>
+            <button class="btn-primary" onclick="downloadImage()">Download Line Drawing</button>
+        </div>
+    </div>
+    
+    <script>
+        let originalImage = null;
+        let currentFile = null;
+        
+        const imageInput = document.getElementById('imageInput');
+        const dropZone = document.getElementById('dropZone');
+        const originalCanvas = document.getElementById('originalCanvas');
+        const previewCanvas = document.getElementById('previewCanvas');
+        const previewContainer = document.getElementById('previewContainer');
+        const controls = document.getElementById('controls');
+        const buttonGroup = document.getElementById('buttonGroup');
+        const message = document.getElementById('message');
+        const strengthSlider = document.getElementById('strengthSlider');
+        const contrastSlider = document.getElementById('contrastSlider');
+        const strengthValue = document.getElementById('strengthValue');
+        const contrastValue = document.getElementById('contrastValue');
+        
+        // Drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleImageUpload(files[0]);
+            }
+        });
+        
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageUpload(e.target.files[0]);
+            }
+        });
+        
+        function handleImageUpload(file) {
+            currentFile = file;
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    drawOriginal();
+                    updatePreview();
+                    previewContainer.classList.add('show');
+                    controls.classList.add('show');
+                    buttonGroup.style.display = 'flex';
+                    message.classList.remove('show');
+                };
+                img.src = e.target.result;
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function drawOriginal() {
+            const ctx = originalCanvas.getContext('2d');
+            originalCanvas.width = originalImage.width;
+            originalCanvas.height = originalImage.height;
+            ctx.drawImage(originalImage, 0, 0);
+        }
+        
+        function updatePreview() {
+            const ctx = previewCanvas.getContext('2d');
+            previewCanvas.width = originalImage.width;
+            previewCanvas.height = originalImage.height;
+            
+            const strength = parseInt(strengthSlider.value);
+            const contrast = parseInt(contrastSlider.value);
+            
+            strengthValue.textContent = strength;
+            contrastValue.textContent = contrast;
+            
+            // Draw to canvas
+            ctx.drawImage(originalImage, 0, 0);
+            
+            // Get image data
+            const imageData = ctx.getImageData(0, 0, previewCanvas.width, previewCanvas.height);
+            const data = imageData.data;
+            
+            // Convert to grayscale
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                data[i] = gray;
+                data[i + 1] = gray;
+                data[i + 2] = gray;
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            
+            // Apply edge detection using Sobel operator
+            applyEdgeDetection(ctx, strength, contrast);
+        }
+        
+        function applyEdgeDetection(ctx, strength, contrast) {
+            const imageData = ctx.getImageData(0, 0, previewCanvas.width, previewCanvas.height);
+            const data = imageData.data;
+            const width = previewCanvas.width;
+            const height = previewCanvas.height;
+            
+            // Sobel operator
+            const sobelKernelX = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+            const sobelKernelY = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
+            
+            const output = new Uint8ClampedArray(data.length);
+            
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    let gx = 0, gy = 0;
+                    
+                    for (let ky = -1; ky <= 1; ky++) {
+                        for (let kx = -1; kx <= 1; kx++) {
+                            const idx = ((y + ky) * width + (x + kx)) * 4;
+                            const pixel = data[idx];
+                            
+                            gx += sobelKernelX[ky + 1][kx + 1] * pixel;
+                            gy += sobelKernelY[ky + 1][kx + 1] * pixel;
+                        }
+                    }
+                    
+                    let magnitude = Math.sqrt(gx * gx + gy * gy);
+                    magnitude = Math.min(255, (magnitude / (strength * 50)) * contrast);
+                    
+                    const idx = (y * width + x) * 4;
+                    const inverted = 255 - magnitude;
+                    
+                    output[idx] = inverted;
+                    output[idx + 1] = inverted;
+                    output[idx + 2] = inverted;
+                    output[idx + 3] = 255;
+                }
+            }
+            
+            // Copy edge pixels to output
+            for (let i = 0; i < output.length; i += 4) {
+                data[i] = output[i];
+                data[i + 1] = output[i + 1];
+                data[i + 2] = output[i + 2];
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+        }
+        
+        strengthSlider.addEventListener('input', updatePreview);
+        contrastSlider.addEventListener('input', updatePreview);
+        
+        function downloadImage() {
+            if (!originalImage) return;
+            
+            const canvas = previewCanvas;
+            const link = document.createElement('a');
+            link.download = currentFile.name.replace(/\.[^.]+$/, '-line-drawing.png');
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            showMessage(`Downloaded: ${link.download}`, 'success');
+        }
+        
+        function resetConverter() {
+            originalImage = null;
+            currentFile = null;
+            imageInput.value = '';
+            previewContainer.classList.remove('show');
+            controls.classList.remove('show');
+            buttonGroup.style.display = 'none';
+            message.classList.remove('show');
+        }
+        
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message show ${type}`;
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

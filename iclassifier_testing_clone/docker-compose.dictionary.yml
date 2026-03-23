@@ -1,0 +1,7 @@
+services:
+  dictionary:
+    image: macleginn/iclassifier:dictionary
+    container_name: iclassifier-dictionary
+    restart: unless-stopped
+    ports:
+      - "${DICTIONARY_BIND:-127.0.0.1}:${DICTIONARY_PORT:-8090}:8090"
