@@ -9,3 +9,10 @@
   to = "https://archaeomind.netlify.app/app/:splat"
   status = 200
   force = true
+
+# Proxy image assets used by the React app
+[[redirects]]
+  from = "/images_line/*"
+  to = "https://archaeomind.netlify.app/images_line/:splat"
+  status = 200
+  force = true
