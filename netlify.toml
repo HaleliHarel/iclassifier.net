@@ -2,3 +2,10 @@
   publish = "."
 
 # Simple static website - no build commands needed
+
+# Proxy the React app from the separate Netlify site
+[[redirects]]
+  from = "/app/*"
+  to = "https://archaeomind.netlify.app/app/:splat"
+  status = 200
+  force = true
