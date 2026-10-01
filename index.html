@@ -49,7 +49,7 @@
                     <li><a href="/publications/index.html" class="nav-link">Publications</a></li>
                     <li><a href="/about/index.html" class="nav-link">Team</a></li>
                     <li><a href="/contact/index.html" class="nav-link">Contact</a></li>
-                    <li><a href="https://iclassifier.net/app" class="nav-link nav-link-app" target="_blank" rel="noopener">App (test)</a></li>
+                    <li><a href="https://iclassifier.net/app/reports/map" class="nav-link nav-link-app" target="_blank" rel="noopener"><i>iClassifier</i> app 2.0</a></li>
                 </ul>
             </nav>
         </div>
@@ -85,28 +85,20 @@
 
 
 <figure class="demo" role="region" aria-labelledby="demo-caption">
-  <video
-    id="demo-video"
-    class="demo-video"
-    muted
-    playsinline
-    loop
-    preload="metadata"
-    poster="images/startnetwork.png"
-    aria-describedby="demo-caption"
-  >
-    <source src="images/demoiclassifier.webm" type="video/webm">
-    <source src="images/demoiclassifier.mp4"  type="video/mp4">
-    <p>Your browser does not support the video tag. <a href="images/demoiclassifier.mp4">Download the video</a> to view the demonstration.</p>
-  </video>
+  <iframe
+    class="network-embed"
+    src="https://iclassifier.net/app/project/eg-sailor/network"
+    title="The Tale of the Shipwrecked Sailor classifier network"
+    loading="lazy"
+    allowfullscreen
+  ></iframe>
 
   <figcaption class="demo-caption" id="demo-caption">
     <p class="lead">
-      A preview of <i>iClassifier</i> with a classifier network of the medical Papyrus Ebers
+      Live <i>iClassifier</i> network for <i>The Tale of the Shipwrecked Sailor</i>
     </p>
     <p class="meta">
-      Data courtesy of Thesaurus Linguae Aegyptiae (TLA), classifier marking and annotation in
-      <i>iClassifier</i> by Svenja Stern and Tanja Pommerening.
+      <a href="https://iclassifier.net/app/project/eg-sailor/network" target="_blank" rel="noopener">Explore the network using the original <i>iClassifier</i> interface.</a>
     </p>
   </figcaption>
 </figure>
@@ -168,17 +160,6 @@
 
     footer.classList.remove('show'); // start hidden
   })();
-</script>
-
-<script>
-  window.addEventListener('load', function () {
-    'use strict';
-    const v = document.getElementById('demo-video');
-    if (v && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-      // short delay so users perceive the poster, then play
-      setTimeout(() => v.play().catch(() => {}), 600);
-    }
-  });
 </script>
 
 </body>
